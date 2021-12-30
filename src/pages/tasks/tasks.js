@@ -2609,7 +2609,7 @@ function App() {
                     inline
                     name="roughtypeofgem"
                     value={state.roughtypeofgem}
-                    label="Type of Gem"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Type of Gem</p>}
                     onChange={(e) => onRoughType(e)}
                   >
                     <AvRadio label="Precious Gems" value="Precious Gems" />
@@ -3016,7 +3016,7 @@ function App() {
                     inline
                     name="shades"
                     value={state.shades}
-                    label="Shades"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3034,7 +3034,7 @@ function App() {
                     inline
                     name="shades"
                     value={state.shades}
-                    label="Shades"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3061,7 +3061,7 @@ function App() {
                     inline
                     name="shades"
                     value={state.shades}
-                    label="Shades"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3080,7 +3080,7 @@ function App() {
                     inline
                     name="shades"
                     value={state.specificshades}
-                    label="Shades"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
                     onChange={(e) => onShadesChange(e)}
                   >
                     <AvRadio label="Blue" value="Blue" />
@@ -3198,7 +3198,7 @@ function App() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label="Shape"
+                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Faceted" value="Faceted" />
@@ -3213,7 +3213,7 @@ function App() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label="Shape"
+                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3228,7 +3228,7 @@ function App() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label="Shape"
+                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3243,7 +3243,7 @@ function App() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label="Shape"
+                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3456,7 +3456,7 @@ function App() {
                     inline
                     name="specificsource"
                     value={state.specificsource}
-                    label="Mine Source"
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Mine Source</p>}
                     onChange={(e) => onMineSourceChange(e)}
                   >
                     <AvRadio label="Sapphire" value="Sapphire" />
