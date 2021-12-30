@@ -1,0 +1,72 @@
+.myclass-wael {
+  display: none;
+}
+.my-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 25px;
+}
+.modal-footer-exc button {
+
+  background-color: transparent;
+  border: transparent;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+  color: #03a9f4;
+  transition: all 0.3s linear;
+}
+.modal-footer-exc button:hover {
+  background-color: #aed9ec;
+}
+.modal-footer-exc {
+  display: flex;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+@media (min-width: 576px) {
+.modal-dialog {
+    max-width: 350px;
+    margin: 1.75rem auto;
+}
+}
+.avform-button-submit {
+  padding: 11px;
+  background-color: transparent;
+  border: transparent;
+  color: #03a9f4;
+  font-size: 16px;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+}
+.avform-button-submit:hover {
+  background-color: #d6ebf5;
+}
+.avform-button-cancel {
+  margin-left: 20px;
+  padding: 11px;
+  background-color: transparent;
+  border: transparent;
+  color: red;
+  font-size: 16px;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+}
+.avform-button-cancel:hover {
+  background-color: rgb(255, 236, 236);
+}
+.avform-button-reset-form {
+  padding: 11px;
+  background-color: transparent;
+  border: transparent;
+  color: green;
+  font-size: 16px;
+  transition: all 0.3s linear;
+  border-radius: 10px;
+}
+.avform-button-reset-form:hover {
+  background-color: rgb(211, 236, 211);
+}
