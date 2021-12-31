@@ -27,7 +27,6 @@ function AuthProvider(props) {
       localStorage.setItem('isloggedin', true);
       setUser(result.data);
       localStorage.setItem('token', result.token);
-      window.location.reload()
     }
     return result;
   }, []);
