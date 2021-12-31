@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './contexts/auth';
 import { useScreenSizeClass } from './utils/media-query';
 import Content from './Content';
 import UnauthenticatedContent from './UnauthenticatedContent';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 function App() {
   const { user, loading } = useAuth();
@@ -40,3 +41,4 @@ export default function Root() {
     </Router>
   );
 }
+serviceWorkerRegistration.register();
