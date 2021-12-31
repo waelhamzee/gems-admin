@@ -1,11 +1,10 @@
 export const navigation = [
   // {
-  //   text: 'Home',
-  //   path: '/home',
-  //   icon: 'home'
+  //   text: 'My Gems',
+  //   path: '/gems'
   // },
   {
-    text: 'Categories',
+    text: 'My Folder',
     icon: 'folder',
     items: [
       // {
@@ -13,7 +12,7 @@ export const navigation = [
       //   path: '/profile'
       // },
       {
-        text: 'Diamonds',
+        text: 'My Gems',
         path: '/gems'
       },
     ]

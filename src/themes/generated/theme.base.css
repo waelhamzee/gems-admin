@@ -23299,7 +23299,6 @@ input.dx-hidden {
   height: 100%;
 }
 .dx-drawer-panel-content {
-display: none;
   position: absolute;
   top: 0;
   bottom: 0;
