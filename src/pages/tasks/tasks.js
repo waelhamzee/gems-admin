@@ -215,20 +215,19 @@ function App() {
   }
 
   useEffect(() => {
-   
+    if (!navigator.onLine) {
+      const data = JSON.parse(localStorage.getItem("data"))
+         setData(data)
+    } else {
     Axios.get(`${Constants.serverlink}getgems`, {
       headers : {
         "token" : localStorage.getItem('token')
       }
     }).then((response) => {
-     if (navigator.onLine) {
        localStorage.setItem('data', JSON.stringify(response.data))
        setData(response.data);
-     } else {
-         const data = JSON.parse(localStorage.getItem("data"))
-         setData(data)
-     }
     });
+  }
   }, []);
 
   const onSpecificShades = (e) => {
