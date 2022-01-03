@@ -31,7 +31,6 @@ const isLocalhost = Boolean(
   
       window.addEventListener('load', () => {
         const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-  
         if (isLocalhost) {
           // This is running on localhost. Let's check if a service worker still exists or not.
           checkValidServiceWorker(swUrl, config);
@@ -123,6 +122,7 @@ const isLocalhost = Boolean(
         console.log('No internet connection found. App is running in offline mode.');
       });
   }
+
   
   export function unregister() {
     if ('serviceWorker' in navigator) {
