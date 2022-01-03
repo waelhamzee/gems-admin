@@ -221,13 +221,13 @@ function App() {
         "token" : localStorage.getItem('token')
       }
     }).then((response) => {
-      window.addEventListener("offline", function(){
+     if (navigator.onLine) {
+       localStorage.setItem('data', JSON.stringify(response.data))
+       setData(response.data);
+     } else {
          const data = JSON.parse(localStorage.getItem("data"))
-         alert(data)
          setData(data)
-    });
-    localStorage.setItem('data', JSON.stringify(response.data))
-      setData(response.data);
+     }
     });
   }, []);
 
