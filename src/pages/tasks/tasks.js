@@ -215,11 +215,18 @@ function App() {
   }
 
   useEffect(() => {
+   
     Axios.get(`${Constants.serverlink}getgems`, {
       headers : {
         "token" : localStorage.getItem('token')
       }
     }).then((response) => {
+      window.addEventListener("offline", function(){
+         const data = JSON.parse(localStorage.getItem("data"))
+         alert(data)
+         setData(data)
+    });
+    localStorage.setItem('data', JSON.stringify(response.data))
       setData(response.data);
     });
   }, []);

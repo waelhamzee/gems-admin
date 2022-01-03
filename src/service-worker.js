@@ -60,29 +60,6 @@ registerRoute(
     ],
   })
 );
-var CACHE_NAME = 'my-cache_name';
-var targetsToCache = [
-  'https://gems-api.herokuapp.com/getgems'
-];
-
-self.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        return cache.addAll(targetsToCache);
-      })
-  );
-});
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-      caches.match(event.request).then(function(response) {
-
-       // This returns the previously cached response 
-       // or fetch a new once if not already in the cache
-          return response || fetch(event.request);
-      })
-  );
-});
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
