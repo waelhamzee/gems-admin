@@ -2559,6 +2559,9 @@ function Gems() {
         <Column dataField="TypeofGem" caption="Type of Gem">
           <RequiredRule />
         </Column>
+        <Column dataField="Quantity" dataType={"number"}>
+          <RequiredRule />
+        </Column>
         <Column dataField="Formation" caption="Formation">
           <RequiredRule />
         </Column>
@@ -2636,19 +2639,16 @@ function Gems() {
         <Column dataField="QualityGrade" caption="Quality Grade">
           <RequiredRule />
         </Column>
-        <Column dataField="Description" width={150}>
-          <RequiredRule />
-        </Column>
-        <Column dataField="Quantity" dataType={"number"}>
-          <RequiredRule />
-        </Column>
         <Column
           dataField="StockNumber"
           caption={"Stock Number"}
           dataType={"number"}
-        >
+          >
+          </Column>
+        <Column dataField="Description" width={300}>
           <RequiredRule />
         </Column>
+          <RequiredRule />
         <Column type="buttons">
           <Button name="edit" onClick={editClick} />
           <Button name="delete" onClick={deleteClick} />
@@ -4031,6 +4031,7 @@ function Gems() {
                       value={state.weight}
                       thousandSeparator={true}
                       decimalSeparator="00"
+                      placeholder={`${isTypeofgem.isrough? "(grams)" : "(carats)"}`}
                       suffix={`${isTypeofgem.isrough? " grams" : " carats"}`}
                       decimalScale={2}
                       fixedDecimalScale={true}
@@ -4098,8 +4099,7 @@ function Gems() {
                       className="form-controller"
                     />
                   </div>
-                {/* </AvGroup> */}
-                {/* <AvGroup className="my-grid"> */}
+              
                   <AvField
                     label="Stock Number"
                     id="exampleEmail"
@@ -4110,18 +4110,6 @@ function Gems() {
                       setState({ ...state, stocknumber: e.target.value })
                     }
                   />
-                  {/* <AvField
-                    label="Quantity"
-                    id="exampleEmail"
-                    name="email"
-                    placeholder=""
-                    type="number"
-                    value={state.quantity}
-                    onChange={(e) =>
-                      setState({ ...state, quantity: e.target.value })
-                    }
-                  /> */}
-                {/* </AvGroup> */}
                 <AvGroup>
                   <AvField
                     label="Description"
