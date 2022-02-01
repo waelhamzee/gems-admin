@@ -5,15 +5,14 @@ const useNavigation = () => useContext(NavigationContext);
 
 function NavigationProvider(props) {
   const [navigationData, setNavigationData] = useState({});
-
+  const [data,setData] = useState([])
   return (
     <NavigationContext.Provider
-      value={{ navigationData, setNavigationData }}
+      value={{ navigationData, setNavigationData,data,setData }}
       {...props}
     />
   );
 }
-
 function withNavigationWatcher(Component) {
   return function (props) {
     const { path } = props.match;

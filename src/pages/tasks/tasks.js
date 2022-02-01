@@ -33,6 +33,7 @@ import Axios from "axios";
 import Formatter from "./Formatter";
 import NumberFormat from "react-number-format";
 import Constants from "../../core/serverurl";
+import { useNavigation } from "../../contexts/navigation";
 
 const initPopupState = {
   formData: {},
@@ -43,12 +44,13 @@ const generateStock = (min, max) => {
   let result = Math.floor(Math.random() * (max - min + 1)) + min;
   return result;
 };
-function App() {
+function Gems() {
   const [{ formData, popupVisible, popupMode }, dispatchPopup] = useReducer(
     popupReducer,
     initPopupState
   );
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+  const {data,setData} = useNavigation()
   const [isEditing, setisEditing] = useState(false);
   const [modalClassic, setModalClassic] = useState(false);
   const [isenhancement, showEnhancement] = useState(false);
@@ -128,6 +130,14 @@ function App() {
     iscatseye: false,
     isotherminesource: false,
   });
+  const [cost, setCost] = useState({
+    perpiece:false,
+    percarats : false
+  })
+  const [price, setPrice] = useState({
+    perpiece:false,
+    percarats : false
+  })
   const [isothertypeogem, setisOthertypeofgem] = useState(false);
   const [isotherformation, setisOtherformation] = useState(false);
   const [isothercategory, setisOthercategory] = useState(false);
@@ -156,6 +166,8 @@ function App() {
     length: "",
     width: "",
     depth: "",
+    cost : "",
+    price: "",
     costperpiece: "",
     costpercarat: "",
     totalcost: "",
@@ -181,6 +193,9 @@ function App() {
     ID: "",
     stocknumber: null,
   });
+  const [weight, setWeight] = useState()
+  const [costpercarat, setCostPerCarat] = useState()
+  const [pricepercarat, setPricePerCarat] = useState()
 
   const toggleModalClassic = () => {
     setModalClassic(!modalClassic);
@@ -599,6 +614,16 @@ function App() {
     if (e.target.value === "Other") {
       state.typeofgem = "Other";
       setisOthertypeofgem(true);
+      state.specificsource = ''
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: false,
+        isalex: false,
+        isemerald: false,
+        istanzanite: false,
+        iscatseye: false,
+        isotherminesource: false})
     } else if (e.target.value === "Precious Gems") {
       state.typeofgem = "Precious Gems";
       setisRoughtype({
@@ -633,7 +658,119 @@ function App() {
         ispearls: false,
       });
       state.typeofgem = "Sapphire";
-    } else if (e.target.value === "Topaz" || e.target.value === "Tourmaline" || e.target.value === "Spinel" || e.target.value === "Zircon") {
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: true,
+        isruby: false,
+        isalex: false,
+        isemerald: false,
+        istanzanite: false,
+        iscatseye: false,
+        isotherminesource: false})
+        state.specificsource = 'Sapphire'
+    } else if (e.target.value === "Emerald") {
+      setColorCategory({
+        isdiamonds: false,
+        isprecious: true,
+        issemiprecious: false,
+        isrough: false,
+        isopals: false,
+        ispearls: false,
+      });
+      state.typeofgem = "Emerald";
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: false,
+        isalex: false,
+        isemerald: true,
+        istanzanite: false,
+        iscatseye: false,
+        isotherminesource: false})
+        state.specificsource = 'Emerald'
+    } else if (e.target.value === "Ruby") {
+      setColorCategory({
+        isdiamonds: false,
+        isprecious: true,
+        issemiprecious: false,
+        isrough: false,
+        isopals: false,
+        ispearls: false,
+      });
+      state.typeofgem = "Ruby";
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: true,
+        isalex: false,
+        isemerald: false,
+        istanzanite: false,
+        iscatseye: false,
+        isotherminesource: false})
+        state.specificsource = 'Ruby'
+    } else if (e.target.value === "Tanzanite") {
+      setColorCategory({
+        isdiamonds: false,
+        isprecious: true,
+        issemiprecious: false,
+        isrough: false,
+        isopals: false,
+        ispearls: false,
+      });
+      state.typeofgem = "Tanzanite";
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: false,
+        isalex: false,
+        isemerald: false,
+        istanzanite: true,
+        iscatseye: false,
+        isotherminesource: false})
+        state.specificsource = 'Tanzanite'
+    } else if (e.target.value === "Cats Eye") {
+      setColorCategory({
+        isdiamonds: false,
+        isprecious: true,
+        issemiprecious: false,
+        isrough: false,
+        isopals: false,
+        ispearls: false,
+      });
+      state.typeofgem = "Cats Eye";
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: false,
+        isalex: false,
+        isemerald: false,
+        istanzanite: false,
+        iscatseye: true,
+        isotherminesource: false})
+        state.specificsource = 'Cats Eye'
+    } else if (e.target.value === "Alexandrite") {
+      setColorCategory({
+        isdiamonds: false,
+        isprecious: true,
+        issemiprecious: false,
+        isrough: false,
+        isopals: false,
+        ispearls: false,
+      });
+      state.typeofgem = "Alexandrite";
+      setisMinesource({isrest: false,
+        isprecious: true,
+        issaphire: false,
+        isruby: false,
+        isalex: false,
+        isemerald: false,
+        istanzanite: true,
+        iscatseye: false,
+        isotherminesource: false})
+        state.specificsource = 'Alexandrite'
+    } 
+    
+    else if (e.target.value === "Topaz" || e.target.value === "Tourmaline" || e.target.value === "Spinel" || e.target.value === "Zircon") {
       setColorCategory({
         isdiamonds: false,
         isprecious: false,
@@ -1362,6 +1499,18 @@ function App() {
       return e._id === rowdata._id;
     });
     parseInt(editdata.Weight);
+    if (editdata.cost ==='Per Piece') {
+      setCost({perpiece : true,percarats:false})
+    } 
+    if (editdata.cost ==='Per Carats') {
+      setCost({perpiece : false,percarats:true})
+    } 
+    if (editdata.price ==='Per Piece') {
+      setCost({perpiece : true,percarats:false})
+    } 
+    if (editdata.price ==='Per Piece') {
+      setCost({perpiece : false,percarats:true})
+    } 
     if (editdata.Category === "Diamonds") {
       setisTypeofgem({ ...isTypeofgem, isdiamonds: true });
       if (
@@ -1832,6 +1981,8 @@ function App() {
       totalprice: editdata.TotalPrice,
       costpercarat: editdata.Costpercarat,
       costperpiece: editdata.Costperpiece,
+      cost : editdata.cost,
+      price : editdata.price,
       otherpearlsshape: editdata.otherpearlsshape,
       specificsource: editdata.specificsource,
       minesource: editdata.minesource,
@@ -1928,6 +2079,17 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+        var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      });
+    if (costpercarat && weight) {
+      state.totalcost = formatter.format(costpercarat * weight)
+    }
+    if (pricepercarat && weight) {
+      state.totalprice = formatter.format(pricepercarat * weight)
+    }
+    
     if (state.othercolor) {
       state.shades = "";
     }
@@ -1968,6 +2130,8 @@ function App() {
       Width: state.width,
       Depth: state.depth,
       Costperpiece: state.costperpiece,
+      cost: state.cost,
+      price: state.price,
       Costpercarat: state.costpercarat,
       TotalCost: state.totalcost,
       Priceperpiece: state.priceperpiece,
@@ -2016,6 +2180,7 @@ function App() {
         }
       }).then((response) => {
         const editdata = response.data;
+        // localStorage.getItem('data', [...data, response.data])
         setData(
           data.map((item) => {
             if (item._id === state.ID) {
@@ -2067,6 +2232,8 @@ function App() {
                 othershades: editdata.othershades,
                 specificshades: editdata.specificshades,
                 selectroughtypeofgem: editdata.selectroughtypeofgem,
+                cost: editdata.cost,
+                price: editdata.price,
               };
             }
             return item;
@@ -2081,6 +2248,9 @@ function App() {
       }).then((response) => {
         req._id = response.data._id;
         setData((prevdata) => {
+          const wael = JSON.parse(localStorage.getItem("data"))
+          wael.push(req)
+          localStorage.setItem('data', JSON.stringify(wael))
           return [...prevdata, req];
         });
       });
@@ -2116,6 +2286,8 @@ function App() {
       width: "",
       depth: "",
       costperpiece: "",
+      cost: "",
+      price: "",
       costpercarat: "",
       totalcost: "",
       priceperpiece: "",
@@ -2169,6 +2341,8 @@ function App() {
       width: "",
       depth: "",
       costperpiece: "",
+      cost: "",
+      price: "",
       costpercarat: "",
       totalcost: "",
       priceperpiece: "",
@@ -2263,6 +2437,7 @@ function App() {
       iscatseye: false,
       isotherminesource: false,
     });
+    setCost({perpiece:false,percarat:false})
     setisOthercategory(false);
     setisOthertypeofgem(false);
     setisOtherformation(false);
@@ -2270,6 +2445,9 @@ function App() {
     showEnhancement(false);
     showColorIntensity(false);
     showShades(false);
+    setPricePerCarat(null);
+    setCostPerCarat(null);
+
   };
 
   const handleDelete = (e) => {
@@ -2285,6 +2463,41 @@ function App() {
     });
     setModalClassic(false);
   };
+
+  const onCostChange = (e) => {
+    state.cost = e.target.value
+    if (state.cost === "Per Piece") {
+      setCostPerCarat(null)
+      state.costpercarat = ""
+        setCost({perpiece:true, percarats:false})
+    } else if (state.cost === "Per Carats") {
+      setCost({perpiece:false, percarats:true})
+      state.costperpiece =""
+    } else {
+      state.costperpiece =""
+      state.costpercarat = ""
+      setCostPerCarat(null)
+      setCost({perpiece:false, percarats:false})
+    }
+  }
+
+  const onPriceChange = (e) => {
+    state.price = e.target.value
+    if (state.price === "Per Piece") {
+      setPricePerCarat(null)
+      state.pricepercarat = ""
+        setPrice({perpiece:true, percarats:false})
+    } else if (state.price === "Per Carats") {
+      state.priceperpiece = ""
+      setPrice({perpiece:false, percarats:true})
+    } else {
+      state.priceperpiece =""
+      state.pricepercarat = ""
+      setPricePerCarat(null)
+      setPrice({perpiece:false, percarats:false})
+    }
+  }
+
 
 
   return (
@@ -2355,7 +2568,7 @@ function App() {
         <Column dataField="MineSource" caption="Mine Source">
           <RequiredRule />
         </Column>
-        <Column dataField="Weight" dataType={"number"}>
+        <Column dataField="Weight" >
           <RequiredRule />
         </Column>
         <Column dataField="Color" caption="Color">
@@ -2371,55 +2584,49 @@ function App() {
           <RequiredRule />
         </Column>
         {/* <Column caption="Dimensions (mm)"> */}
-          <Column dataField="Length" caption="Length" dataType={"number"}>
+          <Column dataField="Length" caption="Length">
             <RequiredRule />
           </Column>
-          <Column dataField="Width" caption="Width" dataType={"number"}>
+          <Column dataField="Width" caption="Width">
             <RequiredRule />
           </Column>
-          <Column dataField="Depth" caption="Depth" dataType={"number"}>
+          <Column dataField="Depth" caption="Depth">
             <RequiredRule />
           </Column>
         {/* </Column> */}
         <Column
           dataField="Costperpiece"
           caption={"Cost (per piece)"}
-          dataType={"number"}
         >
           <RequiredRule />
         </Column>
         <Column
           dataField="Costpercarat"
           caption={"Cost (per carat)"}
-          dataType={"number"}
         >
           <RequiredRule />
         </Column>
         <Column
           dataField="TotalCost"
           caption={"Total Cost"}
-          dataType={"number"}
         >
           <RequiredRule />
         </Column>
         <Column
           dataField="Priceperpiece"
-          caption={"Price (per piece)"}
-          dataType={"number"}
+          caption={"Selling Price (per piece)"}
         >
           <RequiredRule />
         </Column>
         <Column
           dataField="Pricepercarat"
-          caption={"Price (per carat)"}
-          dataType={"number"}
+          caption={"Selling Price (per carat)"}
         >
           <RequiredRule />
         </Column>
         <Column
           dataField="TotalPrice"
           caption={"Total Price"}
-          dataType={"number"}
         >
           <RequiredRule />
         </Column>
@@ -2731,6 +2938,19 @@ function App() {
                     />
                   </AvGroup>
                 )}
+                 <AvGroup>
+                 <AvField
+                    label="Quantity"
+                    id="exampleEmail"
+                    name="email"
+                    placeholder=""
+                    type="number"
+                    value={state.quantity}
+                    onChange={(e) =>
+                      setState({ ...state, quantity: e.target.value })
+                    }
+                  />
+                  </AvGroup>
                 {isFormation.isrest && (
                   <AvGroup>
                     <AvField
@@ -2937,9 +3157,9 @@ function App() {
                       onChange={(e) => onPreciousClarity(e)}
                     >
                       <option value="">Select...</option>
-                      <option> Very slightly included (VVSI)</option>
-                      <option>Slightly included (VSI)</option>
-                      <option>Moderately included (SI)</option>
+                      <option> Very very slightly included (VVSI)</option>
+                      <option>Very slightly included (VSI)</option>
+                      <option>Slightly included (SI)</option>
                       <option>Included (I)</option>
                       <option>Other</option>
                     </AvField>
@@ -3304,6 +3524,7 @@ function App() {
                     >
                       <option value={""}>Select...</option>
                       <option>Round</option>
+                      <option>Oval</option>
                       <option>Radiant</option>
                       <option>Marquise</option>
                       <option>Square</option>
@@ -3349,6 +3570,7 @@ function App() {
                     >
                       <option value={""}>Select...</option>
                       <option>Round</option>
+                      <option>Oval</option>
                       <option>Radiant</option>
                       <option>Marquise</option>
                       <option>Square</option>
@@ -3394,6 +3616,7 @@ function App() {
                     >
                       <option value={""}>Select...</option>
                       <option>Round</option>
+                      <option>Oval</option>
                       <option>Radiant</option>
                       <option>Marquise</option>
                       <option>Square</option>
@@ -3634,84 +3857,164 @@ function App() {
                   </AvGroup>
                 )}
                 <hr/>
-                <AvGroup className="my-grid">
-                  <div>
-                    <Label>Cost (per piece)</Label>
-                    <NumberFormat
-                      value={state.costperpiece}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, costperpiece: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                  <div>
-                    <Label>Cost (per carat)</Label>
-                    <NumberFormat
-                      value={state.costpercarat}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, costpercarat: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                </AvGroup>
+                <AvGroup>
+                    <AvField
+                      label="Cost"
+                      id="exampleEmail"
+                      name="cost"
+                      type="select"
+                      placeholder=""
+                      value={state.cost}
+                      onChange={(e) =>
+                        onCostChange(e)
+                      }
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Per Piece</option>
+                      <option>Per Carats</option>
+                    </AvField>
+                  </AvGroup>
+                  {cost.perpiece && (
+                    <AvGroup>
+                    <div>
+                      <Label>Cost (per piece)</Label>
+                      <NumberFormat
+                        value={state.costperpiece}
+                        thousandSeparator={true}
+                        prefix={"$"}
+                        decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                        onValueChange={(values) => {
+                          const { formattedValue } = values;
+                          setState({ ...state, costperpiece: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                    </AvGroup>
+                  )}
 
-                <AvGroup className="my-grid">
-                  <div>
-                    <Label>Price (per piece)</Label>
-                    <NumberFormat
-                      value={state.priceperpiece}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, priceperpiece: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                  <div>
-                    <Label>Price (per carat)</Label>
-                    <NumberFormat
-                      value={state.pricepercarat}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, pricepercarat: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                </AvGroup>
+                {cost.percarats && (
+                    <AvGroup>
+                    <div>
+                      <Label>Cost (per carats)</Label>
+                      <NumberFormat
+                        value={state.costpercarat}
+                        thousandSeparator={true}
+                        prefix={"$"}
+                        decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                        onValueChange={(values) => {
+                          const { formattedValue,floatValue } = values;
+                          setCostPerCarat(floatValue)
+                          setState({ ...state, costpercarat: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                    </AvGroup>
+                  )}
 
-                <AvGroup className="my-grid">
+{cost.perpiece && (
+                  <AvGroup>
                   <div>
                     <Label>Total Cost</Label>
                     <NumberFormat
                       value={state.totalcost}
                       thousandSeparator={true}
                       prefix={"$"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
                       onValueChange={(values) => {
                         const { formattedValue } = values;
                         setState({ ...state, totalcost: formattedValue });
+                        // onTotalCostChange(formattedValue)
                       }}
                       className="form-controller"
                     />
                   </div>
+                  </AvGroup>
+                )}
+
+                  <AvGroup>
+                    <AvField
+                      label="Selling Price"
+                      id="exampleEmail"
+                      name="price"
+                      type="select"
+                      placeholder=""
+                      value={state.price}
+                      onChange={(e) =>
+                        onPriceChange(e)
+                      }
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Per Piece</option>
+                      <option>Per Carats</option>
+                    </AvField>
+                  </AvGroup>
+
+
+{price.perpiece && (
+                    <AvGroup>
+                    <div>
+                      <Label>Selling Price (per piece)</Label>
+                      <NumberFormat
+                        value={state.priceperpiece}
+                        thousandSeparator={true}
+                        prefix={"$"}
+                        decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                        onValueChange={(values) => {
+                          const { formattedValue } = values;
+                          setState({ ...state, priceperpiece: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                    </AvGroup>
+                  )}
+
+                {price.percarats && (
+                    <AvGroup>
+                    <div>
+                      <Label>Selling Price (per carats)</Label>
+                      <NumberFormat
+                        value={state.pricepercarat}
+                        thousandSeparator={true}
+                        prefix={"$"}
+                        decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                        onValueChange={(values) => {
+                          const { formattedValue,floatValue } = values;
+                          setPricePerCarat(floatValue)
+                          setState({ ...state, pricepercarat: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                    </AvGroup>
+                  )}
+
+
+
+                
+               {price.perpiece && (
+                  <AvGroup>
                   <div>
                     <Label>Total Price</Label>
                     <NumberFormat
                       value={state.totalprice}
                       thousandSeparator={true}
                       prefix={"$"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
                       onValueChange={(values) => {
                         const { formattedValue } = values;
                         setState({ ...state, totalprice: formattedValue });
@@ -3720,58 +4023,83 @@ function App() {
                     />
                   </div>
                 </AvGroup>
+               )}
                 <hr/>
-                <AvGroup className="my-grid">
-                  <AvField
-                    label="Weight"
-                    id="exampleEmail"
-                    name="weight"
-                    type="text"
-                    placeholder=""
-                    value={state.weight}
-                    onChange={(e) =>
-                      setState({ ...state, weight: e.target.value })
-                    }
-                  />
+                <div style={{marginBottom:'17.5px'}}>
+                    <Label>Weight</Label>
+                    <NumberFormat
+                      value={state.weight}
+                      thousandSeparator={true}
+                      decimalSeparator="00"
+                      suffix={`${isTypeofgem.isrough? " grams" : " carats"}`}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue,floatValue } = values;
+                        setWeight(floatValue)
+                        setState({ ...state, weight: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
 
-                  <AvField
-                    label="Length"
-                    id="exampleEmail"
-                    type="number"
-                    name="length"
-                    placeholder=""
-                    value={state.length}
-                    onChange={(e) =>
-                      setState({ ...state, length: e.target.value })
-                    }
-                  />
-                </AvGroup>
+                 
+                  <div style={{marginBottom:'17.5px'}}>
+                    <Label>Length</Label>
+                    <NumberFormat
+                      value={state.length}
+                      thousandSeparator={true}
+                      decimalSeparator="00"
+                      suffix={" mm"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue } = values;
+                        setState({ ...state, length: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
+                {/* </AvGroup> */}
 
-                <AvGroup className="my-grid">
-                  <AvField
-                    label="Width"
-                    id="exampleEmail"
-                    type="number"
-                    name="width"
-                    placeholder=""
-                    value={state.width}
-                    onChange={(e) =>
-                      setState({ ...state, width: e.target.value })
-                    }
-                  />
-                  <AvField
-                    label="Depth"
-                    id="exampleEmail"
-                    type="number"
-                    name="depth"
-                    placeholder=""
-                    value={state.depth}
-                    onChange={(e) =>
-                      setState({ ...state, depth: e.target.value })
-                    }
-                  />
-                </AvGroup>
-                <AvGroup className="my-grid">
+                {/* <AvGroup className="my-grid"> */}
+                <div style={{marginBottom:'17.5px'}}>
+                    <Label>Width</Label>
+                    <NumberFormat
+                      value={state.width}
+                      thousandSeparator={true}
+                      suffix={" mm"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue } = values;
+                        setState({ ...state, width: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
+                  <div style={{marginBottom:'17.5px'}}>
+                    <Label>Depth</Label>
+                    <NumberFormat
+                      value={state.depth}
+                      thousandSeparator={true}
+                      decimalSeparator="00"
+                      suffix={" mm"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue } = values;
+                        setState({ ...state, depth: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
+                {/* </AvGroup> */}
+                {/* <AvGroup className="my-grid"> */}
                   <AvField
                     label="Stock Number"
                     id="exampleEmail"
@@ -3782,7 +4110,7 @@ function App() {
                       setState({ ...state, stocknumber: e.target.value })
                     }
                   />
-                  <AvField
+                  {/* <AvField
                     label="Quantity"
                     id="exampleEmail"
                     name="email"
@@ -3792,8 +4120,8 @@ function App() {
                     onChange={(e) =>
                       setState({ ...state, quantity: e.target.value })
                     }
-                  />
-                </AvGroup>
+                  /> */}
+                {/* </AvGroup> */}
                 <AvGroup>
                   <AvField
                     label="Description"
@@ -3846,7 +4174,7 @@ function App() {
   );
 }
 
-export default App;
+export default Gems;
 
 function popupReducer(state, action) {
   switch (action.type) {
