@@ -94,6 +94,9 @@ function GemCategory() {
         <Column dataField="TypeofGem" caption="Type of Gem">
           <RequiredRule />
         </Column>
+        <Column dataField="Quantity" dataType={"number"}>
+          <RequiredRule />
+        </Column>
         <Column dataField="Formation" caption="Formation">
           <RequiredRule />
         </Column>
@@ -173,9 +176,9 @@ function GemCategory() {
         <Column dataField="Description" width={150}>
           <RequiredRule />
         </Column>
-        <Column dataField="Quantity" dataType={"number"}>
+        {/* <Column dataField="Quantity" dataType={"number"}>
           <RequiredRule />
-        </Column>
+        </Column> */}
         <Column
           dataField="StockNumber"
           caption={"Stock Number"}
