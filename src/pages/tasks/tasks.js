@@ -19,7 +19,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Popup } from "devextreme-react/popup";
 import { RequiredRule } from "devextreme-react/validator";
-import { Label, Modal } from "reactstrap";
+import {  Label, Modalow } from "reactstrap";
 import {
   AvField,
   AvForm,
@@ -30,7 +30,6 @@ import {
 import "./index.css";
 import { ScrollView } from "devextreme-react";
 import Axios from "axios";
-import Formatter from "./Formatter";
 import NumberFormat from "react-number-format";
 import Constants from "../../core/serverurl";
 import { useNavigation } from "../../contexts/navigation";
@@ -2078,6 +2077,30 @@ function Gems() {
   }
 
   const handleSubmit = (e) => {
+    if (document.getElementById("othertypeofgem")) {
+      state.othertypeofgem = document.getElementById("othertypeofgem").value 
+    }
+    if (document.getElementById("othercategory")) {
+      state.othercategory = document.getElementById("othercategory").value 
+    }
+    if (document.getElementById("otherroughtypeofgem")) {
+      state.otherroughtypeofgem = document.getElementById("otherroughtypeofgem").value 
+    }
+    if (document.getElementById("otherminesource")) {
+      state.otherminesource = document.getElementById("otherminesource").value 
+    }
+    if (document.getElementById("othercolor")) {
+      state.othercolor = document.getElementById("othercolor").value 
+    }
+    if ( document.getElementById("otherformation")) {
+      state.otherformation = document.getElementById("otherformation").value 
+    }
+    if (document.getElementById("othercolorintensity")) {
+      state.othercolorintensity = document.getElementById("othercolorintensity").value 
+    }
+    if (document.getElementById("otherclarity")) {
+      state.otherclarity = document.getElementById("otherclarity").value 
+    }
     e.preventDefault();
         var formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -2140,7 +2163,7 @@ function Gems() {
       MineSource: state.minesource,
       Enhancement: state.enhancement,
       QualityGrade: state.qualitygrade,
-      Description: state.description,
+      Description: document.getElementById("description").innerHTML,
       Quantity: state.quantity,
       StockNumber: state.stocknumber,
       specifyshape: state.specifyshape,
@@ -2701,9 +2724,9 @@ function Gems() {
                       id="othercagory"
                       name="othercategory"
                       value={state.othercategory}
-                      onChange={(e) =>
-                        setState({ ...state, othercategory: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setState({ ...state, othercategory: e.target.value })
+                      // }
                     />
                   </AvGroup>
                 )}
@@ -2913,7 +2936,7 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other"
-                      id="typeofgem"
+                      id="otherroughtypeofgem"
                       name="otherroughtypeofgem"
                       value={state.otherroughtypeofgem}
                       onChange={(e) =>
@@ -2929,12 +2952,12 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Type of Gem"
-                      id="typeofgem"
-                      name="othertypeogem"
+                      id="othertypeofgem"
+                      name="othertypeofgem"
                       value={state.othertypeofgem}
-                      onChange={(e) =>
-                        setState({ ...state, othertypeofgem: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setState({ ...state, othertypeofgem: e.target.value })
+                      // }
                     />
                   </AvGroup>
                 )}
@@ -2992,13 +3015,13 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Formation"
-                      id="exampleEmail"
+                      id="otherformation"
                       name="otherformation"
                       placeholder=""
                       value={state.otherformation}
-                      onChange={(e) =>
-                        setState({ ...state, otherformation: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setState({ ...state, otherformation: e.target.value })
+                      // }
                     ></AvField>
                   </AvGroup>
                 )}
@@ -3106,13 +3129,13 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Color"
-                      id="exampleEmail"
+                      id="othercolor"
                       name="othercolor"
                       placeholder=""
                       value={state.othercolor}
-                      onChange={(e) =>
-                        setState({ ...state, othercolor: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setState({ ...state, othercolor: e.target.value })
+                      // }
                     ></AvField>
                   </AvGroup>
                 )}
@@ -3169,13 +3192,13 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other"
-                      id="exampleEmail"
+                      id="otherclarity"
                       name="otherclarity"
                       placeholder=""
                       value={state.otherclarity}
-                      onChange={(e) =>
-                        setState({ ...state, otherclarity: e.target.value })
-                      }
+                      // onChange={(e) =>
+                      //   setState({ ...state, otherclarity: e.target.value })
+                      // }
                     ></AvField>
                   </AvGroup>
                 )}
@@ -3203,16 +3226,16 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Color Intensity"
-                      id="exampleEmail"
+                      id="othercolorintensity"
                       name="othercolorintensity"
                       placeholder=""
                       value={state.othercolorintensity}
-                      onChange={(e) =>
-                        setState({
-                          ...state,
-                          othercolorintensity: e.target.value,
-                        })
-                      }
+                      // onChange={(e) =>
+                      //   setState({
+                      //     ...state,
+                      //     othercolorintensity: e.target.value,
+                      //   })
+                      // }
                     />
                   </AvGroup>
                 )}
@@ -3402,7 +3425,7 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Shades"
-                      id="exampleEmail"
+                      id="othershades"
                       name="othershades"
                       placeholder=""
                       value={state.othershades}
@@ -3837,6 +3860,26 @@ function Gems() {
                   </AvGroup>
                 )}
 
+                <div style={{marginBottom:'17.5px'}}>
+                    <Label>Weight</Label>
+                    <NumberFormat
+                      value={state.weight}
+                      thousandSeparator={true}
+                      decimalSeparator="00"
+                      placeholder={`${isTypeofgem.isrough? "(grams)" : "(carats)"}`}
+                      suffix={`${isTypeofgem.isrough? " grams" : " carats"}`}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue,floatValue } = values;
+                        setWeight(floatValue)
+                        setState({ ...state, weight: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
+
                 {isenhancement && (
                   <AvGroup>
                     <AvField
@@ -4025,27 +4068,10 @@ function Gems() {
                 </AvGroup>
                )}
                 <hr/>
-                <div style={{marginBottom:'17.5px'}}>
-                    <Label>Weight</Label>
-                    <NumberFormat
-                      value={state.weight}
-                      thousandSeparator={true}
-                      decimalSeparator="00"
-                      placeholder={`${isTypeofgem.isrough? "(grams)" : "(carats)"}`}
-                      suffix={`${isTypeofgem.isrough? " grams" : " carats"}`}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue,floatValue } = values;
-                        setWeight(floatValue)
-                        setState({ ...state, weight: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
+               
 
                  
+                  <div style={{display:'grid', gridTemplateColumns:'auto auto auto', gridGap : '20px'}}>
                   <div style={{marginBottom:'17.5px'}}>
                     <Label>Length</Label>
                     <NumberFormat
@@ -4063,9 +4089,7 @@ function Gems() {
                       className="form-controller"
                     />
                   </div>
-                {/* </AvGroup> */}
 
-                {/* <AvGroup className="my-grid"> */}
                 <div style={{marginBottom:'17.5px'}}>
                     <Label>Width</Label>
                     <NumberFormat
@@ -4099,6 +4123,7 @@ function Gems() {
                       className="form-controller"
                     />
                   </div>
+                  </div>
               
                   <AvField
                     label="Stock Number"
@@ -4113,14 +4138,11 @@ function Gems() {
                 <AvGroup>
                   <AvField
                     label="Description"
-                    id="exampleEmail"
+                    id="description"
                     name="email"
                     type="textarea"
                     placeholder=""
                     value={state.description}
-                    onChange={(e) =>
-                      setState({ ...state, description: e.target.value })
-                    }
                   />
                 </AvGroup>
               </div>
