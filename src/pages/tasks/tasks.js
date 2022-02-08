@@ -19,7 +19,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Popup } from "devextreme-react/popup";
 import { RequiredRule } from "devextreme-react/validator";
-import {  Label, Modalow } from "reactstrap";
+import {  Label, Modal } from "reactstrap";
 import {
   AvField,
   AvForm,
