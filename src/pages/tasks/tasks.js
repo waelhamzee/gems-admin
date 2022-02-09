@@ -27,6 +27,7 @@ import {
   AvRadioGroup,
   AvRadio,
 } from "availity-reactstrap-validation";
+import './format.css'
 import "./index.css";
 import { ScrollView } from "devextreme-react";
 import Axios from "axios";
@@ -229,6 +230,23 @@ function Gems() {
   }
 
   useEffect(() => {
+    // if (!navigator.onLine) {
+    //   const data = JSON.parse(localStorage.getItem("data"))
+    //      setData(data)
+    // } else {
+    // Axios.get(`${Constants.serverlink}getgems`, {
+    //   headers : {
+    //     "token" : localStorage.getItem('token')
+    //   }
+    // }).then((response) => {
+    //    localStorage.setItem('data', JSON.stringify(response.data))
+    //    setData(response.data);
+    // });
+  // }
+  callPage()
+  }, []);
+
+  const callPage = () => {
     if (!navigator.onLine) {
       const data = JSON.parse(localStorage.getItem("data"))
          setData(data)
@@ -242,7 +260,7 @@ function Gems() {
        setData(response.data);
     });
   }
-  }, []);
+  }
 
   const onSpecificShades = (e) => {
     if (e.target.value === "Other") {
@@ -2201,82 +2219,13 @@ function Gems() {
         headers : {
           "token" : localStorage.getItem('token')
         }
-      }).then((response) => {
-        const editdata = response.data;
-        // localStorage.getItem('data', [...data, response.data])
-        setData(
-          data.map((item) => {
-            if (item._id === state.ID) {
-              return {
-                ...item,
-                Category: editdata.Category,
-                Formation: editdata.Formation,
-                Shape: editdata.Shape,
-                Weight: editdata.Weight,
-                Color: editdata.Color,
-                Shades: editdata.Shades,
-                Clarity: editdata.Clarity,
-                Enhancement: editdata.Enhancement,
-                Quantity: editdata.Quantity,
-                StockNumber: editdata.StockNumber,
-                Depth: editdata.Depth,
-                Width: editdata.Width,
-                Length: editdata.Length,
-                QualityGrade: editdata.QualityGrade,
-                Description: editdata.Description,
-                ColorIntensity: editdata.ColorIntensity,
-                TypeofGem: editdata.TypeofGem,
-                TotalPrice: editdata.TotalPrice,
-                MineSource: editdata.MineSource,
-                Pricepercarat: editdata.Pricepercarat,
-                Priceperpiece: editdata.Priceperpiece,
-                TotalCost: editdata.TotalCost,
-                Costpercarat: editdata.Costpercarat,
-                Costperpiece: editdata.Costperpiece,
-                specifyshape: editdata.specifyshape,
-                oldeushape: editdata.oldeushape,
-                facetedshape: editdata.facetedshape,
-                otherfacetedshape: editdata.otherfacetedshape,
-                otheroldeushape: editdata.otheroldeushape,
-                fancyshape: editdata.fancyshape,
-                othercategory: editdata.othercategory,
-                roughtypeofgem: editdata.roughtypeofgem,
-                otherroughtypeofgem: editdata.otherroughtypeofgem,
-                cabochonshape: editdata.cabochonshape,
-                othercabochonshape: editdata.othercabochonshape,
-                otherformation: editdata.otherformation,
-                otherpearlsshape: editdata.otherpearlsshape,
-                specificsource: editdata.specificsource,
-                otherminesource: editdata.otherminesource,
-                selectminesource: editdata.selectminesource,
-                othercolorintensity: editdata.othercolorintensity,
-                otherclarity: editdata.otherclarity,
-                listshades: editdata.listshades,
-                othershades: editdata.othershades,
-                specificshades: editdata.specificshades,
-                selectroughtypeofgem: editdata.selectroughtypeofgem,
-                cost: editdata.cost,
-                price: editdata.price,
-              };
-            }
-            return item;
-          })
-        );
-      });
+      }).then(r => callPage())
     } else {
-      Axios.post(`${Constants.serverlink}data`, req, {
+       Axios.post(`${Constants.serverlink}data`, req, {
         headers : {
           "token" : localStorage.getItem('token')
         }
-      }).then((response) => {
-        req._id = response.data._id;
-        setData((prevdata) => {
-          const wael = JSON.parse(localStorage.getItem("data"))
-          wael.push(req)
-          localStorage.setItem('data', JSON.stringify(wael))
-          return [...prevdata, req];
-        });
-      });
+      }).then(r => callPage())
     }
     dispatchPopup({ type: "hidePopup" });
     handleHidePopup();
@@ -2480,10 +2429,7 @@ function Gems() {
       headers : {
         "token" : localStorage.getItem('token')
       },
-    }).then((response) => {
-      const id = response.data._id;
-      setData(data.filter((item) => item._id !== id));
-    });
+    }).then(r => callPage())
     setModalClassic(false);
   };
 
@@ -3861,7 +3807,7 @@ function Gems() {
                 )}
 
                 <div style={{marginBottom:'17.5px'}}>
-                    <Label>Weight</Label>
+                   <Label>Weight</Label>
                     <NumberFormat
                       value={state.weight}
                       thousandSeparator={true}
