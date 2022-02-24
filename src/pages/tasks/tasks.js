@@ -20,6 +20,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Popup } from "devextreme-react/popup";
 import { RequiredRule } from "devextreme-react/validator";
 import {  Label, Modal } from "reactstrap";
+import { useLocation } from 'react-router-dom'
 import {
   AvField,
   AvForm,
@@ -50,6 +51,7 @@ function Gems() {
     initPopupState
   );
   // const [data, setData] = useState([]);
+  const location = useLocation()
   const {data,setData} = useNavigation()
   const [isEditing, setisEditing] = useState(false);
   const [modalClassic, setModalClassic] = useState(false);
@@ -230,35 +232,51 @@ function Gems() {
   }
 
   useEffect(() => {
-    // if (!navigator.onLine) {
-    //   const data = JSON.parse(localStorage.getItem("data"))
-    //      setData(data)
-    // } else {
-    // Axios.get(`${Constants.serverlink}getgems`, {
-    //   headers : {
-    //     "token" : localStorage.getItem('token')
-    //   }
-    // }).then((response) => {
-    //    localStorage.setItem('data', JSON.stringify(response.data))
-    //    setData(response.data);
-    // });
-  // }
   callPage()
   }, []);
 
   const callPage = () => {
     if (!navigator.onLine) {
-      const data = JSON.parse(localStorage.getItem("data"))
+      const data = JSON.parse(localStorage.getItem(location.pathname))
          setData(data)
     } else {
-    Axios.get(`${Constants.serverlink}getgems`, {
-      headers : {
-        "token" : localStorage.getItem('token')
-      }
-    }).then((response) => {
-       localStorage.setItem('data', JSON.stringify(response.data))
-       setData(response.data);
-    });
+      if (location.pathname === '/gems') {
+      Axios.get(`${Constants.serverlink}getgems`, {
+        headers : {
+          "token" : localStorage.getItem('token')
+        }
+      }).then((response) => {
+        localStorage.setItem(location.pathname, JSON.stringify(response.data))
+        setData(response.data);
+      });
+    } else {
+      let s;
+      Axios.get(`${Constants.serverlink}folder/list`,{
+        headers : {
+          "token" : localStorage.getItem('token')
+        }
+      }).then((response) => {
+        if (response.data.length>0 && response.status === 200) {
+         response.data.map((e) => {
+            for (let i =0; i<e.items.length; i++) {
+              if (location.pathname === e.items[i].path) {
+                s = e.items[i].text;
+                break;
+              }
+            }
+          })
+        }
+            Axios.get(`${Constants.serverlink}getcategory/${s}`,{
+            headers : {
+              "token" : localStorage.getItem('token')
+            }
+          }).then((response) => {
+              localStorage.setItem(location.pathname, JSON.stringify(response.data))
+              setData(response.data);
+          });
+      });
+
+    }
   }
   }
 
@@ -811,6 +829,7 @@ function Gems() {
       handleHidePopup(1);
       setisOthercategory(true);
       state.stocknumber = 0;
+      state.category = "Other"
     } else if (e.target.value === "Precious Gems") {
       // NullifyState()
       showEnhancement(true);
@@ -1516,6 +1535,9 @@ function Gems() {
       return e._id === rowdata._id;
     });
     parseInt(editdata.Weight);
+    if (editdata.othercategory) {
+      setisOthercategory(true)
+    }
     if (editdata.cost ==='Per Piece') {
       setCost({perpiece : true,percarats:false})
     } 
@@ -2337,7 +2359,7 @@ function Gems() {
       specificshades: "",
       selectroughtypeofgem: "",
       ID: "",
-      stocknumber: null,
+      stocknumber: "",
     });
     setisClarity({
       isprecious: false,
@@ -2517,7 +2539,7 @@ function Gems() {
         <SearchPanel visible={true} />
         <Editing
           allowUpdating={true}
-          allowAdding={true}
+          allowAdding={location.pathname==='/gems' ? true : false}
           allowDeleting={true}
           useIcons={true}
           mode="popup"
@@ -2611,7 +2633,6 @@ function Gems() {
         <Column
           dataField="StockNumber"
           caption={"Stock Number"}
-          dataType={"number"}
           >
           </Column>
         <Column dataField="Description" width={300}>
@@ -2667,7 +2688,7 @@ function Gems() {
                   <AvGroup>
                     <AvField
                       label="Other Category"
-                      id="othercagory"
+                      id="othercategory"
                       name="othercategory"
                       value={state.othercategory}
                       // onChange={(e) =>

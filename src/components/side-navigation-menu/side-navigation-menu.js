@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useState , useRef, useCallback, useMemo } from 'react';
 import TreeView from 'devextreme-react/tree-view';
 import { navigation } from '../../app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import './side-navigation-menu.scss';
+import Axios from 'axios'
+import Constants from '../../core/serverurl';
 
 import * as events from 'devextreme/events';
 
@@ -15,14 +17,29 @@ export default function SideNavigationMenu(props) {
     compactMode,
     onMenuReady
   } = props;
+  const [navigation, setNavigation] = useState([])
+
 
   const { isLarge } = useScreenSize();
   function normalizePath () {
-    return navigation.map((item) => {
-      if(item.path && !(/^\//.test(item.path))){
-        item.path = `/${item.path}`;
+    Axios.get(`${Constants.serverlink}folder/list`,{
+      headers : {
+        "token" : localStorage.getItem('token')
       }
-      return {...item, expanded: isLarge};
+    }).then((response) => {
+        let obj = {
+          text : 'Main Folder',
+          icon : 'folder',
+          items : [{
+            text : 'Manage Folders',
+            path : '/profile'
+          }, {
+            text : 'Gems',
+            path : '/gems'
+          }]
+        }
+        response.data.unshift(obj)
+        setNavigation(response.data)
     });
   }
 
@@ -73,7 +90,7 @@ export default function SideNavigationMenu(props) {
       <div className={'menu-container'}>
         <TreeView
           ref={treeViewRef}
-          items={items}
+          items={navigation}
           keyExpr={'path'}
           selectionMode={'single'}
           focusStateEnabled={false}

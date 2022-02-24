@@ -1,17 +1,17 @@
 
 export const navigation = [
   // {
-  //   text: 'My Gems',
-  //   path: '/gems'
+  //   text: 'Home',
+  //   path: '/home'
   // },
   {
     text: 'My Folder',
     icon: 'folder',
     items: [
-      // {
-      //   text: 'Profile',
-      //   path: '/profile'
-      // },
+      {
+        text: 'Profile',
+        path: '/profile'
+      },
       {
         text: 'All Gems',
         path: '/gems'
