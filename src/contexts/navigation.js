@@ -52,25 +52,8 @@ function NavigationProvider(props) {
           "token" : localStorage.getItem('token')
         }
       }).then((response) => {
-        // if (response.data.length>0 && response.status === 200) {
-        //  response.data.map((e) => {
-        //     for (let i =0; i<e.items.length; i++) {
-        //       if (location.pathname === e.items[i].path) {
-        //         s = e.items[i].text;
-        //         break;
-        //       }
-        //     }
-        //   })
-        // }
+        localStorage.setItem(location.pathname, JSON.stringify(response.data))
          setData(response.data)
-          //   Axios.get(`${Constants.serverlink}getcategory/${s}`,{
-          //   headers : {
-          //     "token" : localStorage.getItem('token')
-          //   }
-          // }).then((response) => {
-          //     localStorage.setItem(location.pathname, JSON.stringify(response.data))
-          //     setData(response.data);
-          // });
       });
 
     }
