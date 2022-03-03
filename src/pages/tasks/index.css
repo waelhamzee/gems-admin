@@ -6,6 +6,9 @@
   grid-template-columns: auto auto;
   column-gap: 25px;
 }
+.bi-export {
+  cursor: pointer;
+}
 .modal-footer-exc button {
 
   background-color: transparent;
@@ -69,4 +72,12 @@
 }
 .avform-button-reset-form:hover {
   background-color: rgb(211, 236, 211);
+}
+.style-export {
+  font-size: 25px;
+  background-color: transparent;
+}
+.btn-export {
+  background-color: transparent;
+  border: none;
 }

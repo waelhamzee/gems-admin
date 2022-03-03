@@ -1,12 +1,9 @@
-import React, { useEffect, useState , useRef, useCallback, useMemo } from 'react';
+import React, { useEffect , useRef, useCallback, useMemo } from 'react';
 import TreeView from 'devextreme-react/tree-view';
-import { navigation } from '../../app-navigation';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import './side-navigation-menu.scss';
-import Axios from 'axios'
-import Constants from '../../core/serverurl';
-
+import { AiOutlinePlus,AiOutlineDelete } from 'react-icons/ai';
 import * as events from 'devextreme/events';
 
 export default function SideNavigationMenu(props) {
@@ -17,32 +14,10 @@ export default function SideNavigationMenu(props) {
     compactMode,
     onMenuReady
   } = props;
-  const [navigation, setNavigation] = useState([])
+  const {navigation,normalizePath,setPopupVisible3,setPopupVisible4} = useNavigation()
 
 
   const { isLarge } = useScreenSize();
-  function normalizePath () {
-    Axios.get(`${Constants.serverlink}folder/list`,{
-      headers : {
-        "token" : localStorage.getItem('token')
-      }
-    }).then((response) => {
-        let obj = {
-          text : 'Main Folder',
-          icon : 'folder',
-          items : [{
-            text : 'Manage Folders',
-            path : '/profile'
-          }, {
-            text : 'Gems',
-            path : '/gems'
-          }]
-        }
-        response.data.unshift(obj)
-        setNavigation(response.data)
-    });
-  }
-
   const items = useMemo(
     normalizePath,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,12 +57,23 @@ export default function SideNavigationMenu(props) {
   }, [currentPath, compactMode]);
 
   return (
+
     <div
       className={'dx-swatch-additional side-navigation-menu'}
       ref={getWrapperRef}
     >
       {children}
       <div className={'menu-container'}>
+       <div className='waell'>
+       <div className='menu-flexer' onClick={() => {setPopupVisible3(true)}}>
+          <AiOutlinePlus/>
+        <button>Create Folder</button>
+        </div>
+        <div className='menu-flexer menu-flexer-2' onClick={() => {setPopupVisible4(true)}}>
+          <AiOutlineDelete/>
+        <button>Delete Folder</button>
+        </div>
+       </div>
         <TreeView
           ref={treeViewRef}
           items={navigation}
@@ -97,6 +83,7 @@ export default function SideNavigationMenu(props) {
           expandEvent={'click'}
           onItemClick={selectedItemChanged}
           onContentReady={onMenuReady}
+          searchEnabled={true}
           width={'100%'}
         />
       </div>

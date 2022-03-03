@@ -5,15 +5,6 @@ function AuthProvider(props) {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    // (async function () {
-    //     const result = await getUser();
-    //   if (result.isOk) {
-    //     console.log(result);
-    //     setUser(result.data);
-    //   }
-
-    // setLoading(false);
-    // })();
     if (localStorage.getItem('isloggedin') === "true") {
       setUser('admin')
     } else {
@@ -34,7 +25,6 @@ function AuthProvider(props) {
   const signOut = useCallback(() => {
     localStorage.setItem('isloggedin', false);
     setUser()
-    // Axios.get('http://localhost:3071/nullify')
     localStorage.removeItem('token')
   }, []);
 

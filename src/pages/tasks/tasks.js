@@ -15,11 +15,13 @@ import {
   HeaderFilter,
   Export,
   Scrolling,
+  ColumnChooser,
+  Selection,
 } from "devextreme-react/data-grid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Popup } from "devextreme-react/popup";
 import { RequiredRule } from "devextreme-react/validator";
-import {  Label, Modal } from "reactstrap";
+import {  Card, CardBody, Label, Modal } from "reactstrap";
 import { useLocation } from 'react-router-dom'
 import {
   AvField,
@@ -35,6 +37,10 @@ import Axios from "axios";
 import NumberFormat from "react-number-format";
 import Constants from "../../core/serverurl";
 import { useNavigation } from "../../contexts/navigation";
+import {BiExport} from "react-icons/bi"
+import FileContainer from "./FileContainer";
+import CreateFolders from "./CreateFolders";
+import DeleteFolders from "./DeleteFolders";
 
 const initPopupState = {
   formData: {},
@@ -50,9 +56,10 @@ function Gems() {
     popupReducer,
     initPopupState
   );
+  const {data,callPage,popupVisible3,setPopupVisible3,popupVisible4,setPopupVisible4,popupVisible2, setVisibility} = useNavigation()
   // const [data, setData] = useState([]);
   const location = useLocation()
-  const {data,setData} = useNavigation()
+  const [datatoexport, setDataToExport] = useState()
   const [isEditing, setisEditing] = useState(false);
   const [modalClassic, setModalClassic] = useState(false);
   const [isenhancement, showEnhancement] = useState(false);
@@ -235,50 +242,6 @@ function Gems() {
   callPage()
   }, []);
 
-  const callPage = () => {
-    if (!navigator.onLine) {
-      const data = JSON.parse(localStorage.getItem(location.pathname))
-         setData(data)
-    } else {
-      if (location.pathname === '/gems') {
-      Axios.get(`${Constants.serverlink}getgems`, {
-        headers : {
-          "token" : localStorage.getItem('token')
-        }
-      }).then((response) => {
-        localStorage.setItem(location.pathname, JSON.stringify(response.data))
-        setData(response.data);
-      });
-    } else {
-      let s;
-      Axios.get(`${Constants.serverlink}folder/list`,{
-        headers : {
-          "token" : localStorage.getItem('token')
-        }
-      }).then((response) => {
-        if (response.data.length>0 && response.status === 200) {
-         response.data.map((e) => {
-            for (let i =0; i<e.items.length; i++) {
-              if (location.pathname === e.items[i].path) {
-                s = e.items[i].text;
-                break;
-              }
-            }
-          })
-        }
-            Axios.get(`${Constants.serverlink}getcategory/${s}`,{
-            headers : {
-              "token" : localStorage.getItem('token')
-            }
-          }).then((response) => {
-              localStorage.setItem(location.pathname, JSON.stringify(response.data))
-              setData(response.data);
-          });
-      });
-
-    }
-  }
-  }
 
   const onSpecificShades = (e) => {
     if (e.target.value === "Other") {
@@ -380,7 +343,6 @@ function Gems() {
         iscatseye: false,
       });
     } else {
-      // state.minesource =  `Sapphire / ${e.target.value}`
       state.selectminesource = e.target.value;
       state.minesource = e.target.value;
       setisMinesource({
@@ -410,7 +372,6 @@ function Gems() {
         iscatseye: false,
       });
     } else {
-      // state.minesource =  `Alexandrite / ${e.target.value}`
       state.selectminesource = e.target.value;
       state.minesource = e.target.value;
       setisMinesource({
@@ -441,7 +402,6 @@ function Gems() {
         iscatseye: false,
       });
     } else {
-      // state.minesource =  `Emerald / ${e.target.value}`
       state.selectminesource = e.target.value;
       state.minesource = e.target.value;
       setisMinesource({
@@ -472,7 +432,6 @@ function Gems() {
         iscatseye: false,
       });
     } else {
-      // state.minesource =  `Ruby / ${e.target.value}`
       state.selectminesource = e.target.value;
       state.minesource = e.target.value;
       setisMinesource({
@@ -831,7 +790,6 @@ function Gems() {
       state.stocknumber = 0;
       state.category = "Other"
     } else if (e.target.value === "Precious Gems") {
-      // NullifyState()
       showEnhancement(true);
       state.stocknumber = generateStock(200000, 300000);
       setisClarity({
@@ -845,7 +803,6 @@ function Gems() {
         isopals: false,
         isother: false,
       });
-      // setColorCategory({isdiamonds :false, isprecious : true, issemi : false, isrough : false, isopals :false,ispearls : false})
       showColorIntensity(true);
       setColorCategory({
         isdiamonds: false,
@@ -866,7 +823,6 @@ function Gems() {
         isroughsemiprecious: false,
         isroughopals: false,
       });
-      // setColorCategory({})
       setisShape({
         faceted: false,
         oldeuropean: false,
@@ -894,7 +850,6 @@ function Gems() {
       state.category = e.target.value;
       setisOthercategory(false);
     } else if (e.target.value === "Semi-Precious Gems") {
-      // NullifyState()
       showEnhancement(true);
       state.stocknumber = generateStock(300000, 400000);
       setisClarity({
@@ -1035,7 +990,6 @@ function Gems() {
       state.category = e.target.value;
       setisOthercategory(false);
     } else if (e.target.value === "Pearls") {
-      // NullifyState()
       showEnhancement(false);
       state.stocknumber = generateStock(600000, 700000);
       setisClarity({
@@ -1105,7 +1059,6 @@ function Gems() {
       setisOtherformation(false);
       setisOthercolorintensity(false);
     } else if (e.target.value === "Diamonds") {
-      // NullifyState()
       showEnhancement(false);
       state.stocknumber = generateStock(100000, 200000);
       setisClarity({
@@ -1169,7 +1122,6 @@ function Gems() {
       setisOthercolorintensity(false);
       state.category = e.target.value;
     } else if (e.target.value === "Rough") {
-      // NullifyState()
       showEnhancement(false);
       state.stocknumber = generateStock(500000, 600000);
       setisClarity({
@@ -1233,48 +1185,6 @@ function Gems() {
       setisOthercolorintensity(false);
       state.category = e.target.value;
     } else {
-      // state.category = e.target.value;
-      // setisShape({
-      //   faceted: false,
-      //   oldeuropean: false,
-      //   fancy: false,
-      //   isotherfaceted: false,
-      //   isotheroldeu: false,
-      //   isprecious: false,
-      //   issemiprecious: false,
-      //   isopals: false,
-      //   ispearls: false,
-      //   isdiamonds: false,
-      // });
-      // setisTypeofgem({
-      //   isdiamonds: false,
-      //   isprecious: false,
-      //   issemiprecious: false,
-      //   isopals: false,
-      //   ispearls: false,
-      //   isrough: false,
-      //   isroughprecious: false,
-      //   isroughsemiprecious: false,
-      //   isroughopals: false,
-      // });
-      // showEnhancement(false);
-      // setisClarity({
-      //   isprecious: false,
-      //   isdiamonds: false,
-      //   isotherprecious: false,
-      // });
-      // setColorCategory({
-      //   isdiamonds: false,
-      //   isprecious: false,
-      //   issemi: false,
-      //   isrough: false,
-      //   isopals: false,
-      //   ispearls: false,
-      // });
-      // setisFormation({ isrest: false, ispearls: false });
-      // setisMinesource({ ...isMinesource, isrest: false, isprecious: false });
-      // setisOthercategory(false);
-      // showColorIntensity(false);
       handleHidePopup();
     }
   };
@@ -1523,7 +1433,6 @@ function Gems() {
   };
 
   function editClick(e) {
-    // setStateToNull();
     setisOtherformation(false);
     setisOthertypeofgem(false);
     setisOthercategory(false);
@@ -1534,7 +1443,20 @@ function Gems() {
     const editdata = data.find((e) => {
       return e._id === rowdata._id;
     });
+    console.log(editdata);
     parseInt(editdata.Weight);
+    if (editdata.Costperpiece) {
+      setCost({perpiece : true})
+    }
+    if (editdata.Costpercarat) {
+      setCost({percarats : true})
+    }
+    if (editdata.Priceperpiece) {
+      setPrice({perpiece : true})
+    }
+    if (editdata.Pricepercarat) {
+      setPrice({percarats : true})
+    }
     if (editdata.othercategory) {
       setisOthercategory(true)
     }
@@ -1715,14 +1637,6 @@ function Gems() {
       }
       if (editdata.specificsource === "Cats Eye") {
         setisMinesource({ ...isMinesource, iscatseye: true, isprecious: true });
-        // if (editdata.selectminesource === 'Other') {
-        //   setisMinesource({
-        //     ...isMinesource,
-        //     isotherminesource: false,
-        //     isprecious: true,
-        //     iscatseye: true,
-        //   });
-        // }
       }
       if (editdata.specificsource === "Other") {
         setisMinesource({
@@ -1730,14 +1644,6 @@ function Gems() {
           isotherminesource: true,
           isprecious: true,
         });
-        // if (editdata.otherminesource) {
-        //   setisMinesource({
-        //     ...isMinesource,
-        //     isotherminesource: false,
-        //     isprecious: true,
-        //     iscatseye: true,
-        //   });
-        // }
       }
       showColorIntensity(true);
       if (
@@ -1834,9 +1740,6 @@ function Gems() {
           setisShades({ ...isShades, isothershades: true, blue: true });
         }
       }
-      // if (editdata.othershades && editdata.listshades === 'Other') {
-      //   setisShades({ ...isShades, isothershades: true });
-      // }
     } else if (editdata.Category === "Opals") {
       setisTypeofgem({ ...isTypeofgem, isopals: true });
       if (
@@ -2060,7 +1963,6 @@ function Gems() {
 
   function addClick(e) {
     setisEditing(false);
-    // setStateToNull();
     setisShape({ faceted: false, oldeuropean: false });
     setisColor({
       colorwhite: false,
@@ -2103,12 +2005,9 @@ function Gems() {
       }
     }
   }
-  // resetScrollPos('.mblScrollableViewContainer');
 
   function showPopup(popupMode, data) {
     dispatchPopup({ type: "initPopup", data, popupMode });
-    // resetScrollPos('.scroll-top')
-    // document.getElementById('scroll-top').scrollIntoView();
   }
 
   function onHiding() {
@@ -2166,7 +2065,6 @@ function Gems() {
       state.selectroughtypeofgem !== "Other" &&
       state.selectroughtypeofgem !== ""
     ) {
-      // state.typeofgem = `${state.roughtypeofgem} / ${state.selectroughtypeofgem}`
       state.typeofgem = state.selectroughtypeofgem;
     }
     if (
@@ -2175,9 +2073,7 @@ function Gems() {
     ) {
       state.minesource = `${state.specificsource} / ${state.otherminesource}`;
     }
-    // if (state.minesource === 'Other') {
-    //   state.minesource = `${state.specificsource} / ${state.otherminesource}`
-    // }
+   
     let req = {
       Category:
         state.category === "Other" ? state.othercategory : state.category,
@@ -2253,60 +2149,6 @@ function Gems() {
     handleHidePopup();
   };
 
-  const NullifyState = () => {
-    setState({
-      category: "",
-      weight: "",
-      typeofgem: "",
-      roughtypeofgem: "",
-      othertypeofgem: "",
-      otherroughtypeofgem: "",
-      formation: "",
-      otherformation: "",
-      shape: "",
-      facetedshape: "",
-      cabochonshape: "",
-      othercabochonshape: "",
-      oldeushape: "",
-      otherfacetedshape: "",
-      otheroldeushape: "",
-      specifyshape: "",
-      fancyshape: "",
-      color: "",
-      othercolor: "",
-      shades: "",
-      clarity: "",
-      length: "",
-      width: "",
-      depth: "",
-      costperpiece: "",
-      cost: "",
-      price: "",
-      costpercarat: "",
-      totalcost: "",
-      priceperpiece: "",
-      pricepercarat: "",
-      totalprice: "",
-      enhancement: "",
-      qualitygrade: "",
-      description: "",
-      quantity: "",
-      otherpearlsshape: "",
-      specificsource: "",
-      minesource: "",
-      otherminesource: "",
-      selectminesource: "",
-      colorintensity: "",
-      othercolorintensity: "",
-      otherclarity: "",
-      listshades: "",
-      othershades: "",
-      specificshades: "",
-      selectroughtypeofgem: "",
-      ID: "",
-      stocknumber: null,
-    });
-  };
 
   const handleHidePopup = (indicator = 0) => {
     setState({
@@ -2432,6 +2274,7 @@ function Gems() {
       isotherminesource: false,
     });
     setCost({perpiece:false,percarat:false})
+    setPrice({perpiece:false,percarat:false})
     setisOthercategory(false);
     setisOthertypeofgem(false);
     setisOtherformation(false);
@@ -2491,8 +2334,25 @@ function Gems() {
 
 
 
+  const handleExport = () => {
+    setVisibility(!popupVisible2)
+  }
+
+ 
+  const onSelectionChanged = (e) => {
+    setDataToExport(e.selectedRowsData)
+  }
+
+
   return (
     <div style={{padding: '10px'}}>
+     {location.pathname==='/gems' && (
+        <Card>
+        <CardBody>
+        <button onClick={() => handleExport()} className="btn-export"><BiExport className="style-export"/></button>
+        </CardBody>
+      </Card>
+     )}
       <Modal isOpen={modalClassic} toggle={toggleModalClassic}>
         <div className="modal-header justify-content-center">
           <p className="title title-up" style={{ margin: "0" }}>
@@ -2520,7 +2380,16 @@ function Gems() {
         onToolbarPreparing={onToolbarPreparing}
         showRowLines={true}
         showBorders={true}
+        onSelectionChanged={onSelectionChanged}
       >
+         <Selection
+            mode="multiple"
+            selectAllMode={'allPages'}
+          />
+        <ColumnChooser
+                    enabled={true}
+                    mode="dragAndDrop" 
+                />
         <Scrolling columnRenderingMode="virtual" />
         <RemoteOperations groupPaging={true} />
         <Grouping autoExpandAll={true} />
@@ -2537,14 +2406,16 @@ function Gems() {
         <ColumnFixing enabled={true} />
         <FilterRow visible={true} />
         <SearchPanel visible={true} />
+
         <Editing
           allowUpdating={true}
           allowAdding={location.pathname==='/gems' ? true : false}
-          allowDeleting={true}
+          allowDeleting={location.pathname==='/gems' ? true : false}
           useIcons={true}
           mode="popup"
         />
-        <Column dataField="Category" caption="Category">
+        <Button>hii</Button>
+        <Column dataField="Category" caption="Category" allowSearch={true}>
           <RequiredRule />
         </Column>
         <Column dataField="TypeofGem" caption="Type of Gem">
@@ -2645,11 +2516,44 @@ function Gems() {
         </Column>
       </DataGrid>
       <Popup
+      style={{height:'62vh', width:'45vw'}}
+        title={'Export selected data'}
+        closeOnOutsideClick={true}
+        visible={popupVisible2}
+        onHiding={() => setVisibility(false)}
+     >
+         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
+       <FileContainer data={datatoexport}/>
+       </ScrollView>
+     </Popup>
+     <Popup
+        title={'Delete Folder'}
+        closeOnOutsideClick={true}
+        visible={popupVisible4}
+        onHiding={() => setPopupVisible4(false)}
+     >
+         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
+       <DeleteFolders/>
+       </ScrollView>
+     </Popup>
+     <Popup
+        title={'Create Folder'}
+        closeOnOutsideClick={true}
+        visible={popupVisible3}
+        onHiding={() => setPopupVisible3(false)}
+     >
+         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
+         <CreateFolders/>
+       </ScrollView>
+     </Popup>
+      <Popup
         title={popupMode}
         closeOnOutsideClick={true}
         visible={popupVisible}
         onHiding={onHiding}
-      >
+     >
+      
+
         {/* <ToolbarItem
           widget="dxButton"
           location="after"
@@ -3906,6 +3810,7 @@ function Gems() {
                   )}
 
                 {cost.percarats && (
+                  <>
                     <AvGroup>
                     <div>
                       <Label>Cost (per carats)</Label>
@@ -3919,12 +3824,32 @@ function Gems() {
                         onValueChange={(values) => {
                           const { formattedValue,floatValue } = values;
                           setCostPerCarat(floatValue)
-                          setState({ ...state, costpercarat: formattedValue });
+                          setState({ ...state, costpercarat: formattedValue, totalcost : floatValue * weight });
                         }}
                         className="form-controller"
                       />
                     </div>
                     </AvGroup>
+                     <AvGroup>
+                     <div>
+                       <Label>Total Cost</Label>
+                       <NumberFormat
+                         value={state.totalcost}
+                         thousandSeparator={true}
+                         prefix={"$"}
+                         decimalScale={2}
+                         fixedDecimalScale={true}
+                         decimalSeparator={'.'}
+                         onValueChange={(values) => {
+                           const { formattedValue } = values;
+                           setState({ ...state, totalcost: formattedValue });
+                           // onTotalCostChange(formattedValue)
+                         }}
+                         className="form-controller"
+                       />
+                     </div>
+                     </AvGroup>
+                     </>
                   )}
 
 {cost.perpiece && (
@@ -3990,6 +3915,7 @@ function Gems() {
                   )}
 
                 {price.percarats && (
+                  <>
                     <AvGroup>
                     <div>
                       <Label>Selling Price (per carats)</Label>
@@ -4003,12 +3929,31 @@ function Gems() {
                         onValueChange={(values) => {
                           const { formattedValue,floatValue } = values;
                           setPricePerCarat(floatValue)
-                          setState({ ...state, pricepercarat: formattedValue });
+                          setState({ ...state, pricepercarat: formattedValue, totalprice : floatValue * weight });
                         }}
                         className="form-controller"
                       />
                     </div>
                     </AvGroup>
+                    <AvGroup>
+                  <div>
+                    <Label>Total Price</Label>
+                    <NumberFormat
+                      value={state.totalprice}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                      decimalScale={2}
+                      fixedDecimalScale={true}
+                      decimalSeparator={'.'}
+                      onValueChange={(values) => {
+                        const { formattedValue } = values;
+                        setState({ ...state, totalprice: formattedValue });
+                      }}
+                      className="form-controller"
+                    />
+                  </div>
+                </AvGroup>
+                    </>
                   )}
 
 

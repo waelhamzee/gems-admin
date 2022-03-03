@@ -18,8 +18,15 @@ export default function SideNavInnerToolbar({ title, children }) {
   const [menuStatus, setMenuStatus] = useState(
     isLarge ? MenuStatus.Opened : MenuStatus.Closed
   );
-
+  let count = 1;
   const toggleMenu = useCallback(({ event }) => {
+      const mydiv = document.getElementsByClassName("waell")[0]
+      if (count%2!==0) {
+        mydiv.style.zIndex = "-1"
+      } else {
+        mydiv.style.zIndex = "1"
+      }
+      count++;
     setMenuStatus(
       prevMenuStatus => prevMenuStatus === MenuStatus.Closed
         ? MenuStatus.Opened
@@ -29,11 +36,19 @@ export default function SideNavInnerToolbar({ title, children }) {
   }, []);
 
   const temporaryOpenMenu = useCallback(() => {
-    setMenuStatus(
-      prevMenuStatus => prevMenuStatus === MenuStatus.Closed
-        ? MenuStatus.TemporaryOpened
-        : prevMenuStatus
-    );
+    // const mydiv = document.getElementsByClassName("waell")[0]
+    // if (count%2!=0) {
+    //   mydiv.style.zIndex = "-1"
+    // } else {
+    //   mydiv.style.zIndex = "1"
+    // }
+    // count++;
+    // setMenuStatus(
+    //   prevMenuStatus => prevMenuStatus === MenuStatus.Closed
+    //   ? MenuStatus.TemporaryOpened
+    //   : prevMenuStatus
+    //   );
+   
   }, []);
 
   const onOutsideClick = useCallback(() => {

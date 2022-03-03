@@ -1,15 +1,11 @@
 import React, { useState , useEffect} from 'react';
-import './profile.scss';
+import '../profile/profile.scss';
 import {
   AvField,
   AvForm,
 } from "availity-reactstrap-validation";
 // reactstrap components
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardTitle,
     Row,
     Col, Button
 } from "reactstrap";
@@ -17,11 +13,12 @@ import  Axios  from 'axios';
 import Constants from '../../core/serverurl';
 import { useNavigation } from '../../contexts/navigation';
 
-export default function Profile() {
+export default function CreateFolders() {
   const [foldername, setFolderName] = useState()
   const [filename, setFileName] = useState()
   const [errorMessage, setError] = useState("")
-  const {normalizePath} = useNavigation() 
+  const {setPopupVisible3} = useNavigation() 
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -45,7 +42,11 @@ export default function Profile() {
     if (response.data.message) {
       return setError(response.data.message)
     }
-    normalizePath()
+    setPopupVisible3(false)
+    setFolderName("")
+    setFileName("")
+    // normalizePath()
+    document.location.reload()
   });
   }
 
@@ -56,12 +57,7 @@ export default function Profile() {
         <h4></h4>
         <Row>
             <Col md="12">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Create Folder</CardTitle>
-                </CardHeader>
-                <CardBody>
-                <div style={{paddingLeft:'50px',paddingRight:'50px'}}>
+                <div>
                <AvForm
             className="form-horizontal"
             id="TypeValidation"
@@ -85,11 +81,10 @@ export default function Profile() {
                 />
                 {errorMessage && <p style={{margin:'0 10 0 10'}}>{errorMessage}</p>}
                 <Button onClick={() => createFolder()}>Save</Button>
+                <Button style={{marginLeft:'10px'}} onClick={() => setPopupVisible3(false)}>Cancel</Button>
           </AvForm>
 
                </div>
-                </CardBody>
-              </Card>
             </Col>
         </Row>
     </div>
@@ -97,3 +92,9 @@ export default function Profile() {
   );
 }
 
+const colCountByScreen = {
+  xs: 1,
+  sm: 2,
+  md: 3,
+  lg: 4
+};

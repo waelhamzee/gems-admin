@@ -1,0 +1,16 @@
+.my-div-search {
+    display: flex;
+    padding:5px;
+    width: 100%;
+    margin-left: 15px;
+    justify-content: center;
+    align-items: center;
+}
+.my-search {
+    padding: 8px 10px 8px 10px;  
+    border: none;  
+    width: 500px;
+}
+.my-search:focus {
+    outline: none;
+}
