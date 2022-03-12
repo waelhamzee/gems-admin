@@ -12,11 +12,13 @@ import {
 import Axios from "axios";
 import Constants from "../../core/serverurl";
 import { useNavigation } from "../../contexts/navigation";
+import { Accordion, TreeView } from "devextreme-react";
 
 const FileContainer = ({data}) => {
   const [foldername, setFolderName] = useState();
   const [errorMessage, setError] = useState("")
   const [filename, setFileName] = useState("")
+  const [files, setFiles] = useState([])
   const { setVisibility }  = useNavigation()
 
   const saveToFolder = () => {
@@ -43,6 +45,48 @@ const FileContainer = ({data}) => {
     return () => clearTimeout(timeout);
   }, [errorMessage]);
 
+  useEffect(() => {
+    renderAccordion()
+  },[])
+
+  const renderAccordion = async  () => {
+    const response = await  Axios.get(`${Constants.serverlink}folder/list`,{
+      headers : {
+        "token" : localStorage.getItem('token')
+      }
+    })
+    if (response.data.length>0) {
+      // let arr = response.data 
+      // console.log(arr);
+      // arr.map((e) => {
+      //   if (e.text) {
+      //     e.title = e.text 
+      //   }
+      // })
+      setFiles(response.data)
+    }
+  }
+
+  const selectedItemChanged = (e) => {
+    console.log(e);
+    if (e.itemData.path) {
+      Axios.post(`${Constants.serverlink}gems/folder`, {
+        folderName : e.node.parent.text,
+        data : data,
+        filename : e.itemData.path
+    } , {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+    }).then((response) => {
+      if (response.data.message) {
+       return setError(response.data.message)
+      }
+      setVisibility(false)
+    });
+    }
+  }
+
   return (
       <Row>
         <Col md="12">
@@ -51,8 +95,20 @@ const FileContainer = ({data}) => {
             className="form-horizontal"
             id="TypeValidation"
           >
-           
-                <AvField
+            {errorMessage && <p style={{margin:'0 10 0 10'}}>{errorMessage}</p>}
+             <TreeView
+          // ref={treeViewRef}
+          items={files}
+          keyExpr={'path'}
+          selectionMode={'single'}
+          focusStateEnabled={false}
+          expandEvent={'click'}
+          onItemClick={selectedItemChanged}
+          // onContentReady={onMenuReady}
+          // searchEnabled={true}
+          width={'100%'}
+        />
+                {/* <AvField
                   label="Folder Name"
                   id="foldername"
                   name="foldername"
@@ -66,13 +122,13 @@ const FileContainer = ({data}) => {
                   name="filename"
                   value={filename}
                   onChange={(e) => setFileName(e.target.value)}
-                />
+                /> */}
+                
 
                 
              
 
-                {errorMessage && <p style={{margin:'0 10 0 10'}}>{errorMessage}</p>}
-                <Button onClick={() => saveToFolder()}>Save</Button>
+                
           </AvForm>
         </Col>
       </Row>
