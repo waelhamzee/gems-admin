@@ -2592,7 +2592,7 @@ function Gems() {
       </Popup>
    
       <Popup
-        title={"Create Folder"}
+        title={"Manager Folders"}
         closeOnOutsideClick={true}
         visible={popupVisible3}
         height={"auto"}
