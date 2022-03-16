@@ -16,7 +16,37 @@
     margin: 0 auto;
   }
 }
+
 .required:after {
   content:" *";
   color: red;
+}
+.first-one {
+  padding:12px;
+}
+.first-one span{
+  font-size: 20px;
+  font-weight: 500;
+}
+.second-one {
+  background-color:  transparent;
+  border:none
+}
+.new-one {
+  background-color: #fff;
+  font-size: 17px;
+  background-color: transparent;
+  border: transparent;
+}
+.second-one svg {
+  margin-left: 5px;
+}
+.third-one {
+  padding:12px;
+  padding-top: 0;
+  padding-left: 25px;
+}
+.fourth-one p {
+  font-size: 20px;
+  font-weight: 500;
 }

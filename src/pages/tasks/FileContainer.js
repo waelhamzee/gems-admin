@@ -21,23 +21,6 @@ const FileContainer = ({data}) => {
   const [files, setFiles] = useState([])
   const { setVisibility }  = useNavigation()
 
-  const saveToFolder = () => {
-    Axios.post(`${Constants.serverlink}gems/folder`, {
-        folderName : foldername,
-        data : data,
-        filename : `/${filename.split(" ").join("").toLowerCase()}`
-    } , {
-      headers: {
-        token: localStorage.getItem("token"),
-      },
-    }).then((response) => {
-      if (response.data.message) {
-       return setError(response.data.message)
-      }
-      setVisibility(false)
-    });
-  };
-
   useEffect(() => {
     const timeout = setTimeout(() => {
       setError("");
@@ -56,13 +39,6 @@ const FileContainer = ({data}) => {
       }
     })
     if (response.data.length>0) {
-      // let arr = response.data 
-      // console.log(arr);
-      // arr.map((e) => {
-      //   if (e.text) {
-      //     e.title = e.text 
-      //   }
-      // })
       setFiles(response.data)
     }
   }

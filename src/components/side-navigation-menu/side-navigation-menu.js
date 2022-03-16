@@ -1,10 +1,12 @@
-import React, { useEffect , useRef, useCallback, useMemo } from 'react';
+import React, { useEffect , useRef, useCallback, useMemo, useState } from 'react';
 import TreeView from 'devextreme-react/tree-view';
 import { useNavigation } from '../../contexts/navigation';
 import { useScreenSize } from '../../utils/media-query';
 import './side-navigation-menu.scss';
 import { AiOutlinePlus,AiOutlineDelete } from 'react-icons/ai';
 import * as events from 'devextreme/events';
+import { FileManager } from 'devextreme-react';
+import { Permissions } from 'devextreme-react/file-manager';
 
 export default function SideNavigationMenu(props) {
   const {
@@ -15,7 +17,7 @@ export default function SideNavigationMenu(props) {
     onMenuReady
   } = props;
   const {navigation,normalizePath,setPopupVisible3,setPopupVisible4} = useNavigation()
-
+  const [state, setState] = useState([])
 
   const { isLarge } = useScreenSize();
   const items = useMemo(
@@ -56,6 +58,9 @@ export default function SideNavigationMenu(props) {
     }
   }, [currentPath, compactMode]);
 
+  
+
+
   return (
 
     <div
@@ -67,14 +72,11 @@ export default function SideNavigationMenu(props) {
        <div className='waell'>
        <div className='menu-flexer' onClick={() => {setPopupVisible3(true)}}>
           <AiOutlinePlus/>
-        <button>Create Folder</button>
-        </div>
-        <div className='menu-flexer menu-flexer-2' onClick={() => {setPopupVisible4(true)}}>
-          <AiOutlineDelete/>
-        <button>Delete Folder</button>
+        <button>Manager Folders</button>
         </div>
        </div>
-        <TreeView
+         <TreeView
+        id='tree-view'
           ref={treeViewRef}
           items={navigation}
           keyExpr={'path'}
@@ -85,8 +87,20 @@ export default function SideNavigationMenu(props) {
           onContentReady={onMenuReady}
           searchEnabled={true}
           width={'100%'}
-        />
+        /> 
       </div>
     </div>
+        // <FileManager
+        //  >
+        //   <Permissions
+        //     create={true}
+        //     copy={true}
+        //     move={true}
+        //     delete={true}
+        //     rename={true}
+        //     // upload={true}
+        //     download={true}>
+        //   </Permissions>
+        // </FileManager>
   );
 }

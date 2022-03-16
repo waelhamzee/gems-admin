@@ -17,12 +17,13 @@ import {
   Scrolling,
   ColumnChooser,
   Selection,
+  StateStoring,
 } from "devextreme-react/data-grid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Popup } from "devextreme-react/popup";
 import { RequiredRule } from "devextreme-react/validator";
-import {  Card, CardBody, Label, Modal } from "reactstrap";
-import { useLocation } from 'react-router-dom'
+import { Card, CardBody, Label, Modal } from "reactstrap";
+import { useLocation } from "react-router-dom";
 import {
   AvField,
   AvForm,
@@ -30,18 +31,25 @@ import {
   AvRadioGroup,
   AvRadio,
 } from "availity-reactstrap-validation";
-import './format.css'
+import "./format.css";
 import "./index.css";
-import { ScrollView } from "devextreme-react";
+import { CheckBox, ScrollView } from "devextreme-react";
 import Axios from "axios";
 import NumberFormat from "react-number-format";
 import Constants from "../../core/serverurl";
 import { useNavigation } from "../../contexts/navigation";
-import {BiExport} from "react-icons/bi"
+import { BiExport } from "react-icons/bi";
 import FileContainer from "./FileContainer";
 import CreateFolders from "./CreateFolders";
 import DeleteFolders from "./DeleteFolders";
-
+const getLocalStorage = () => {
+  let cart = localStorage.getItem("statestoring");
+  if (cart) {
+    return JSON.parse(localStorage.getItem("statestoring"));
+  } else {
+    return false;
+  }
+};
 const initPopupState = {
   formData: {},
   popupVisible: false,
@@ -52,14 +60,26 @@ const generateStock = (min, max) => {
   return result;
 };
 function Gems() {
+  const [statestoring, setStatestoring] = useState(
+    localStorage.getItem("statestoring")
+  );
   const [{ formData, popupVisible, popupMode }, dispatchPopup] = useReducer(
     popupReducer,
     initPopupState
   );
-  const {data,callPage,popupVisible3,setPopupVisible3,popupVisible4,setPopupVisible4,popupVisible2, setVisibility} = useNavigation()
+  const {
+    data,
+    callPage,
+    popupVisible3,
+    setPopupVisible3,
+    popupVisible4,
+    setPopupVisible4,
+    popupVisible2,
+    setVisibility,
+  } = useNavigation();
   // const [data, setData] = useState([]);
-  const location = useLocation()
-  const [datatoexport, setDataToExport] = useState()
+  const location = useLocation();
+  const [datatoexport, setDataToExport] = useState();
   const [isEditing, setisEditing] = useState(false);
   const [modalClassic, setModalClassic] = useState(false);
   const [isenhancement, showEnhancement] = useState(false);
@@ -140,19 +160,20 @@ function Gems() {
     isotherminesource: false,
   });
   const [cost, setCost] = useState({
-    perpiece:false,
-    percarats : false
-  })
+    perpiece: false,
+    percarats: false,
+  });
   const [price, setPrice] = useState({
-    perpiece:false,
-    percarats : false
-  })
+    perpiece: false,
+    percarats: false,
+  });
   const [isothertypeogem, setisOthertypeofgem] = useState(false);
   const [isotherformation, setisOtherformation] = useState(false);
   const [isothercategory, setisOthercategory] = useState(false);
   const [state, setState] = useState({
     category: "",
     weight: "",
+    size: "",
     typeofgem: "",
     roughtypeofgem: "",
     othertypeofgem: "",
@@ -175,7 +196,7 @@ function Gems() {
     length: "",
     width: "",
     depth: "",
-    cost : "",
+    cost: "",
     price: "",
     costperpiece: "",
     costpercarat: "",
@@ -202,9 +223,9 @@ function Gems() {
     ID: "",
     stocknumber: null,
   });
-  const [weight, setWeight] = useState()
-  const [costpercarat, setCostPerCarat] = useState()
-  const [pricepercarat, setPricePerCarat] = useState()
+  const [weight, setWeight] = useState();
+  const [costpercarat, setCostPerCarat] = useState();
+  const [pricepercarat, setPricePerCarat] = useState();
 
   const toggleModalClassic = () => {
     setModalClassic(!modalClassic);
@@ -239,9 +260,8 @@ function Gems() {
   }
 
   useEffect(() => {
-  callPage()
+    callPage();
   }, []);
-
 
   const onSpecificShades = (e) => {
     if (e.target.value === "Other") {
@@ -608,8 +628,9 @@ function Gems() {
     if (e.target.value === "Other") {
       state.typeofgem = "Other";
       setisOthertypeofgem(true);
-      state.specificsource = ''
-      setisMinesource({isrest: false,
+      state.specificsource = "";
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: false,
@@ -617,7 +638,8 @@ function Gems() {
         isemerald: false,
         istanzanite: false,
         iscatseye: false,
-        isotherminesource: false})
+        isotherminesource: false,
+      });
     } else if (e.target.value === "Precious Gems") {
       state.typeofgem = "Precious Gems";
       setisRoughtype({
@@ -652,7 +674,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Sapphire";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: true,
         isruby: false,
@@ -660,8 +683,9 @@ function Gems() {
         isemerald: false,
         istanzanite: false,
         iscatseye: false,
-        isotherminesource: false})
-        state.specificsource = 'Sapphire'
+        isotherminesource: false,
+      });
+      state.specificsource = "Sapphire";
     } else if (e.target.value === "Emerald") {
       setColorCategory({
         isdiamonds: false,
@@ -672,7 +696,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Emerald";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: false,
@@ -680,8 +705,9 @@ function Gems() {
         isemerald: true,
         istanzanite: false,
         iscatseye: false,
-        isotherminesource: false})
-        state.specificsource = 'Emerald'
+        isotherminesource: false,
+      });
+      state.specificsource = "Emerald";
     } else if (e.target.value === "Ruby") {
       setColorCategory({
         isdiamonds: false,
@@ -692,7 +718,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Ruby";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: true,
@@ -700,8 +727,9 @@ function Gems() {
         isemerald: false,
         istanzanite: false,
         iscatseye: false,
-        isotherminesource: false})
-        state.specificsource = 'Ruby'
+        isotherminesource: false,
+      });
+      state.specificsource = "Ruby";
     } else if (e.target.value === "Tanzanite") {
       setColorCategory({
         isdiamonds: false,
@@ -712,7 +740,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Tanzanite";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: false,
@@ -720,8 +749,9 @@ function Gems() {
         isemerald: false,
         istanzanite: true,
         iscatseye: false,
-        isotherminesource: false})
-        state.specificsource = 'Tanzanite'
+        isotherminesource: false,
+      });
+      state.specificsource = "Tanzanite";
     } else if (e.target.value === "Cats Eye") {
       setColorCategory({
         isdiamonds: false,
@@ -732,7 +762,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Cats Eye";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: false,
@@ -740,8 +771,9 @@ function Gems() {
         isemerald: false,
         istanzanite: false,
         iscatseye: true,
-        isotherminesource: false})
-        state.specificsource = 'Cats Eye'
+        isotherminesource: false,
+      });
+      state.specificsource = "Cats Eye";
     } else if (e.target.value === "Alexandrite") {
       setColorCategory({
         isdiamonds: false,
@@ -752,7 +784,8 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = "Alexandrite";
-      setisMinesource({isrest: false,
+      setisMinesource({
+        isrest: false,
         isprecious: true,
         issaphire: false,
         isruby: false,
@@ -760,11 +793,15 @@ function Gems() {
         isemerald: false,
         istanzanite: true,
         iscatseye: false,
-        isotherminesource: false})
-        state.specificsource = 'Alexandrite'
-    } 
-    
-    else if (e.target.value === "Topaz" || e.target.value === "Tourmaline" || e.target.value === "Spinel" || e.target.value === "Zircon") {
+        isotherminesource: false,
+      });
+      state.specificsource = "Alexandrite";
+    } else if (
+      e.target.value === "Topaz" ||
+      e.target.value === "Tourmaline" ||
+      e.target.value === "Spinel" ||
+      e.target.value === "Zircon"
+    ) {
       setColorCategory({
         isdiamonds: false,
         isprecious: false,
@@ -774,11 +811,13 @@ function Gems() {
         ispearls: false,
       });
       state.typeofgem = e.target.value;
-    } 
-    
-    else {
+    } else {
       state.typeofgem = e.target.value;
-      setColorCategory({ ...colorCategory, isprecious: false , issemiprecious:false});
+      setColorCategory({
+        ...colorCategory,
+        isprecious: false,
+        issemiprecious: false,
+      });
       setisOthertypeofgem(false);
     }
   };
@@ -788,7 +827,7 @@ function Gems() {
       handleHidePopup(1);
       setisOthercategory(true);
       state.stocknumber = 0;
-      state.category = "Other"
+      state.category = "Other";
     } else if (e.target.value === "Precious Gems") {
       showEnhancement(true);
       state.stocknumber = generateStock(200000, 300000);
@@ -1331,6 +1370,7 @@ function Gems() {
       });
     } else if (e.target.value === "Other") {
       state.specifyshape = e.target.value;
+      state.description = e.target.value;
       setisShape({
         ...isShape,
         faceted: false,
@@ -1345,6 +1385,7 @@ function Gems() {
     } else {
       state.specifyshape = e.target.value;
       state.shape = e.target.value;
+      state.description = e.target.value;
       setisShape({
         ...isShape,
         ispearls: true,
@@ -1369,6 +1410,7 @@ function Gems() {
     } else {
       state.cabochonshape = e.target.value;
       state.shape = `Cabochon / ${state.cabochonshape}`;
+      state.description = `Cabochon / ${state.cabochonshape}`;
       setisShape({
         ...isShape,
         faceted: false,
@@ -1396,6 +1438,7 @@ function Gems() {
     } else {
       state.facetedshape = e.target.value;
       state.shape = `Faceted / ${state.facetedshape}`;
+      state.description = `Faceted / ${state.facetedshape}`;
       setisShape({
         ...isShape,
         faceted: true,
@@ -1421,6 +1464,7 @@ function Gems() {
     } else {
       state.oldeushape = e.target.value;
       state.shape = `Old European / ${state.oldeushape}`;
+      state.description = `Old European / ${state.oldeushape}`;
       setisShape({
         ...isShape,
         faceted: false,
@@ -1446,32 +1490,32 @@ function Gems() {
     console.log(editdata);
     parseInt(editdata.Weight);
     if (editdata.Costperpiece) {
-      setCost({perpiece : true})
+      setCost({ perpiece: true });
     }
     if (editdata.Costpercarat) {
-      setCost({percarats : true})
+      setCost({ percarats: true });
     }
     if (editdata.Priceperpiece) {
-      setPrice({perpiece : true})
+      setPrice({ perpiece: true });
     }
     if (editdata.Pricepercarat) {
-      setPrice({percarats : true})
+      setPrice({ percarats: true });
     }
     if (editdata.othercategory) {
-      setisOthercategory(true)
+      setisOthercategory(true);
     }
-    if (editdata.cost ==='Per Piece') {
-      setCost({perpiece : true,percarats:false})
-    } 
-    if (editdata.cost ==='Per Carats') {
-      setCost({perpiece : false,percarats:true})
-    } 
-    if (editdata.price ==='Per Piece') {
-      setCost({perpiece : true,percarats:false})
-    } 
-    if (editdata.price ==='Per Piece') {
-      setCost({perpiece : false,percarats:true})
-    } 
+    if (editdata.cost === "Per Piece") {
+      setCost({ perpiece: true, percarats: false });
+    }
+    if (editdata.cost === "Per Carats") {
+      setCost({ perpiece: false, percarats: true });
+    }
+    if (editdata.price === "Per Piece") {
+      setCost({ perpiece: true, percarats: false });
+    }
+    if (editdata.price === "Per Piece") {
+      setCost({ perpiece: false, percarats: true });
+    }
     if (editdata.Category === "Diamonds") {
       setisTypeofgem({ ...isTypeofgem, isdiamonds: true });
       if (
@@ -1710,7 +1754,12 @@ function Gems() {
       if (editdata.othercolor && editdata.othercolor === editdata.Color) {
         setisColor({ ...isColor, isothercolor: true });
       }
-      if (editdata.TypeofGem === 'Topaz' || editdata.TypeofGem === 'Tourmaline' || editdata.TypeofGem === 'Spinel' || editdata.TypeofGem === 'Zircon') {
+      if (
+        editdata.TypeofGem === "Topaz" ||
+        editdata.TypeofGem === "Tourmaline" ||
+        editdata.TypeofGem === "Spinel" ||
+        editdata.TypeofGem === "Zircon"
+      ) {
         setColorCategory({ ...colorCategory, issemiprecious: true });
       }
       if (editdata.Color === "Blue") {
@@ -1718,25 +1767,25 @@ function Gems() {
       }
       if (editdata.specificshades === "Spinel") {
         setisShades({ ...isShades, spinel: true });
-        if (editdata.othershades && editdata.listshades === 'Other') {
+        if (editdata.othershades && editdata.listshades === "Other") {
           setisShades({ ...isShades, isothershades: true, spinel: true });
         }
       }
       if (editdata.specificshades === "Zircon") {
         setisShades({ ...isShades, zircon: true });
-        if (editdata.othershades && editdata.listshades === 'Other') {
+        if (editdata.othershades && editdata.listshades === "Other") {
           setisShades({ ...isShades, isothershades: true, zircon: true });
         }
       }
       if (editdata.specificshades === "Tourmaline") {
         setisShades({ ...isShades, tourmaline: true });
-        if (editdata.othershades && editdata.listshades === 'Other') {
+        if (editdata.othershades && editdata.listshades === "Other") {
           setisShades({ ...isShades, isothershades: true, tourmaline: true });
         }
       }
       if (editdata.specificshades === "Blue") {
         setisShades({ ...isShades, blue: true });
-        if (editdata.othershades && editdata.listshades === 'Other') {
+        if (editdata.othershades && editdata.listshades === "Other") {
           setisShades({ ...isShades, isothershades: true, blue: true });
         }
       }
@@ -1898,6 +1947,7 @@ function Gems() {
           ? "Other"
           : editdata.Formation,
       quantity: editdata.Quantity,
+      size: editdata.Length + "*" + editdata.Width + "*" + editdata.Depth,
       stocknumber: editdata.StockNumber,
       typeofgem:
         editdata.othertypeofgem === editdata.TypeofGem &&
@@ -1923,8 +1973,8 @@ function Gems() {
       totalprice: editdata.TotalPrice,
       costpercarat: editdata.Costpercarat,
       costperpiece: editdata.Costperpiece,
-      cost : editdata.cost,
-      price : editdata.price,
+      cost: editdata.cost,
+      price: editdata.price,
       otherpearlsshape: editdata.otherpearlsshape,
       specificsource: editdata.specificsource,
       minesource: editdata.minesource,
@@ -1998,10 +2048,12 @@ function Gems() {
   function resetScrollPos(selector) {
     var divs = document.querySelectorAll(selector);
     for (var p = 0; p < divs.length; p++) {
-      if (Boolean(divs[p].style.transform)) { //for IE(10) and firefox
-        divs[p].style.transform = 'translate3d(0px, 0px, 0px)';
-      } else { //for chrome and safari
-        divs[p].style['-webkit-transform'] = 'translate3d(0px, 0px, 0px)';
+      if (Boolean(divs[p].style.transform)) {
+        //for IE(10) and firefox
+        divs[p].style.transform = "translate3d(0px, 0px, 0px)";
+      } else {
+        //for chrome and safari
+        divs[p].style["-webkit-transform"] = "translate3d(0px, 0px, 0px)";
       }
     }
   }
@@ -2017,41 +2069,45 @@ function Gems() {
 
   const handleSubmit = (e) => {
     if (document.getElementById("othertypeofgem")) {
-      state.othertypeofgem = document.getElementById("othertypeofgem").value 
+      state.othertypeofgem = document.getElementById("othertypeofgem").value;
     }
     if (document.getElementById("othercategory")) {
-      state.othercategory = document.getElementById("othercategory").value 
+      state.othercategory = document.getElementById("othercategory").value;
     }
     if (document.getElementById("otherroughtypeofgem")) {
-      state.otherroughtypeofgem = document.getElementById("otherroughtypeofgem").value 
+      state.otherroughtypeofgem = document.getElementById(
+        "otherroughtypeofgem"
+      ).value;
     }
     if (document.getElementById("otherminesource")) {
-      state.otherminesource = document.getElementById("otherminesource").value 
+      state.otherminesource = document.getElementById("otherminesource").value;
     }
     if (document.getElementById("othercolor")) {
-      state.othercolor = document.getElementById("othercolor").value 
+      state.othercolor = document.getElementById("othercolor").value;
     }
-    if ( document.getElementById("otherformation")) {
-      state.otherformation = document.getElementById("otherformation").value 
+    if (document.getElementById("otherformation")) {
+      state.otherformation = document.getElementById("otherformation").value;
     }
     if (document.getElementById("othercolorintensity")) {
-      state.othercolorintensity = document.getElementById("othercolorintensity").value 
+      state.othercolorintensity = document.getElementById(
+        "othercolorintensity"
+      ).value;
     }
     if (document.getElementById("otherclarity")) {
-      state.otherclarity = document.getElementById("otherclarity").value 
+      state.otherclarity = document.getElementById("otherclarity").value;
     }
     e.preventDefault();
-        var formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      });
+    var formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
     if (costpercarat && weight) {
-      state.totalcost = formatter.format(costpercarat * weight)
+      state.totalcost = formatter.format(costpercarat * weight);
     }
     if (pricepercarat && weight) {
-      state.totalprice = formatter.format(pricepercarat * weight)
+      state.totalprice = formatter.format(pricepercarat * weight);
     }
-    
+
     if (state.othercolor) {
       state.shades = "";
     }
@@ -2073,7 +2129,7 @@ function Gems() {
     ) {
       state.minesource = `${state.specificsource} / ${state.otherminesource}`;
     }
-   
+
     let req = {
       Category:
         state.category === "Other" ? state.othercategory : state.category,
@@ -2096,6 +2152,7 @@ function Gems() {
       Priceperpiece: state.priceperpiece,
       Pricepercarat: state.pricepercarat,
       TotalPrice: state.totalprice,
+      Size: state.length + "*" + state.width + "*" + state.depth,
       MineSource: state.minesource,
       Enhancement: state.enhancement,
       QualityGrade: state.qualitygrade,
@@ -2133,22 +2190,21 @@ function Gems() {
     };
     if (isEditing) {
       req._id = state.ID;
-      Axios.post(`${Constants.serverlink}data`, req,{
-        headers : {
-          "token" : localStorage.getItem('token')
-        }
-      }).then(r => callPage())
+      Axios.post(`${Constants.serverlink}data`, req, {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }).then((r) => callPage());
     } else {
-       Axios.post(`${Constants.serverlink}data`, req, {
-        headers : {
-          "token" : localStorage.getItem('token')
-        }
-      }).then(r => callPage())
+      Axios.post(`${Constants.serverlink}data`, req, {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }).then((r) => callPage());
     }
     dispatchPopup({ type: "hidePopup" });
     handleHidePopup();
   };
-
 
   const handleHidePopup = (indicator = 0) => {
     setState({
@@ -2190,6 +2246,7 @@ function Gems() {
       quantity: "",
       otherpearlsshape: "",
       specificsource: "",
+      size: "",
       minesource: "",
       otherminesource: "",
       selectminesource: "",
@@ -2273,8 +2330,8 @@ function Gems() {
       iscatseye: false,
       isotherminesource: false,
     });
-    setCost({perpiece:false,percarat:false})
-    setPrice({perpiece:false,percarat:false})
+    setCost({ perpiece: false, percarat: false });
+    setPrice({ perpiece: false, percarat: false });
     setisOthercategory(false);
     setisOthertypeofgem(false);
     setisOtherformation(false);
@@ -2284,75 +2341,107 @@ function Gems() {
     showShades(false);
     setPricePerCarat(null);
     setCostPerCarat(null);
-
   };
 
   const handleDelete = (e) => {
-    Axios.post(`${Constants.serverlink}removeGem`, {
-      id: state.ID,
-    }, {
-      headers : {
-        "token" : localStorage.getItem('token')
+    Axios.post(
+      `${Constants.serverlink}removeGem`,
+      {
+        id: state.ID,
       },
-    }).then(r => callPage())
+      {
+        headers: {
+          token: localStorage.getItem("token"),
+        },
+      }
+    ).then((r) => callPage());
     setModalClassic(false);
   };
 
   const onCostChange = (e) => {
-    state.cost = e.target.value
+    state.cost = e.target.value;
     if (state.cost === "Per Piece") {
-      setCostPerCarat(null)
-      state.costpercarat = ""
-        setCost({perpiece:true, percarats:false})
+      setCostPerCarat(null);
+      state.costpercarat = "";
+      setCost({ perpiece: true, percarats: false });
     } else if (state.cost === "Per Carats") {
-      setCost({perpiece:false, percarats:true})
-      state.costperpiece =""
+      setCost({ perpiece: false, percarats: true });
+      state.costperpiece = "";
     } else {
-      state.costperpiece =""
-      state.costpercarat = ""
-      setCostPerCarat(null)
-      setCost({perpiece:false, percarats:false})
+      state.costperpiece = "";
+      state.costpercarat = "";
+      setCostPerCarat(null);
+      setCost({ perpiece: false, percarats: false });
     }
-  }
+  };
 
   const onPriceChange = (e) => {
-    state.price = e.target.value
+    state.price = e.target.value;
     if (state.price === "Per Piece") {
-      setPricePerCarat(null)
-      state.pricepercarat = ""
-        setPrice({perpiece:true, percarats:false})
+      setPricePerCarat(null);
+      state.pricepercarat = "";
+      setPrice({ perpiece: true, percarats: false });
     } else if (state.price === "Per Carats") {
-      state.priceperpiece = ""
-      setPrice({perpiece:false, percarats:true})
+      state.priceperpiece = "";
+      setPrice({ perpiece: false, percarats: true });
     } else {
-      state.priceperpiece =""
-      state.pricepercarat = ""
-      setPricePerCarat(null)
-      setPrice({perpiece:false, percarats:false})
+      state.priceperpiece = "";
+      state.pricepercarat = "";
+      setPricePerCarat(null);
+      setPrice({ perpiece: false, percarats: false });
     }
-  }
-
-
+  };
 
   const handleExport = () => {
-    setVisibility(!popupVisible2)
-  }
+    setVisibility(!popupVisible2);
+  };
 
- 
   const onSelectionChanged = (e) => {
-    setDataToExport(e.selectedRowsData)
-  }
+    setDataToExport(e.selectedRowsData);
+  };
 
+  const handlePersist = () => {
+    localStorage.setItem("statestoring", true);
+    callPage();
+  };
+
+  const handleDeactivate = () => {
+    localStorage.setItem("statestoring", false);
+    localStorage.removeItem("storage");
+    callPage();
+    window.location.reload();
+  };
 
   return (
-    <div style={{padding: '10px'}}>
-     {location.pathname==='/gems' && (
+    <div style={{ padding: "10px" }}>
+      {location.pathname === "/gems" && (
         <Card>
-        <CardBody>
-        <button onClick={() => handleExport()} className="btn-export"><BiExport className="style-export"/></button>
-        </CardBody>
-      </Card>
-     )}
+          <CardBody>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button onClick={() => handleExport()} className="btn-export">
+                <BiExport className="style-export" />
+              </button>
+              {JSON.parse(localStorage.getItem("statestoring")) ? (
+                <button
+                  onClick={() => handleDeactivate()}
+                  className="btn-export"
+                >
+                  Deactivate Changes
+                </button>
+              ) : (
+                <button onClick={() => handlePersist()} className="btn-export">
+                  Persist Changes
+                </button>
+              )}
+            </div>
+            {/* <CheckBox 
+        text="Persist Changes"
+        // value={() => handleCheckValue()}
+        onValueChanged={handleValueChange}
+        /> */}
+          </CardBody>
+        </Card>
+      )}
       <Modal isOpen={modalClassic} toggle={toggleModalClassic}>
         <div className="modal-header justify-content-center">
           <p className="title title-up" style={{ margin: "0" }}>
@@ -2374,28 +2463,29 @@ function Gems() {
         id="grid-container"
         className={"dx-card wide-card .dx-swatch-additional"}
         allowColumnReordering={true}
+        allowColumnDragging={true}
         allowColumnResizing={true}
         columnAutoWidth={true}
         showColumnLines={true}
         onToolbarPreparing={onToolbarPreparing}
         showRowLines={true}
         showBorders={true}
+        autoScroll={true}
         onSelectionChanged={onSelectionChanged}
       >
-         <Selection
-            mode="multiple"
-            selectAllMode={'allPages'}
-          />
-        <ColumnChooser
-                    enabled={true}
-                    mode="dragAndDrop" 
-                />
+        <StateStoring
+          enabled={JSON.parse(localStorage.getItem("statestoring"))}
+          type="localStorage"
+          storageKey="storage"
+        />
+        <Selection mode="multiple" selectAllMode={"allPages"} />
+        <ColumnChooser enabled={true} mode="dragAndDrop" />
         <Scrolling columnRenderingMode="virtual" />
         <RemoteOperations groupPaging={true} />
         <Grouping autoExpandAll={true} />
         <GroupPanel visible={true} />
         <Paging defaultPageSize={10} />
-        <Export enabled={true}/>
+        <Export enabled={true} />
         <Pager
           showPageSizeSelector={true}
           showInfo={true}
@@ -2409,31 +2499,21 @@ function Gems() {
 
         <Editing
           allowUpdating={true}
-          allowAdding={location.pathname==='/gems' ? true : false}
-          allowDeleting={location.pathname==='/gems' ? true : false}
+          allowAdding={location.pathname === "/gems" ? true : false}
+          allowDeleting={location.pathname === "/gems" ? true : false}
           useIcons={true}
           mode="popup"
         />
-        <Button>hii</Button>
-        <Column dataField="Category" caption="Category" allowSearch={true}>
+        <Column dataField="Category" caption="Category">
           <RequiredRule />
         </Column>
         <Column dataField="TypeofGem" caption="Type of Gem">
           <RequiredRule />
         </Column>
-        <Column dataField="Quantity" dataType={"number"}>
-          <RequiredRule />
-        </Column>
-        <Column dataField="Formation" caption="Formation">
-          <RequiredRule />
-        </Column>
-        <Column dataField="Shape">
-          <RequiredRule />
-        </Column>
         <Column dataField="MineSource" caption="Mine Source">
           <RequiredRule />
         </Column>
-        <Column dataField="Weight" >
+        <Column dataField="Formation" caption="Formation">
           <RequiredRule />
         </Column>
         <Column dataField="Color" caption="Color">
@@ -2448,112 +2528,92 @@ function Gems() {
         <Column dataField="Clarity" caption="Clarity">
           <RequiredRule />
         </Column>
-        {/* <Column caption="Dimensions (mm)"> */}
-          <Column dataField="Length" caption="Length">
-            <RequiredRule />
-          </Column>
-          <Column dataField="Width" caption="Width">
-            <RequiredRule />
-          </Column>
-          <Column dataField="Depth" caption="Depth">
-            <RequiredRule />
-          </Column>
-        {/* </Column> */}
-        <Column
-          dataField="Costperpiece"
-          caption={"Cost (per piece)"}
-        >
-          <RequiredRule />
-        </Column>
-        <Column
-          dataField="Costpercarat"
-          caption={"Cost (per carat)"}
-        >
-          <RequiredRule />
-        </Column>
-        <Column
-          dataField="TotalCost"
-          caption={"Total Cost"}
-        >
-          <RequiredRule />
-        </Column>
-        <Column
-          dataField="Priceperpiece"
-          caption={"Selling Price (per piece)"}
-        >
-          <RequiredRule />
-        </Column>
-        <Column
-          dataField="Pricepercarat"
-          caption={"Selling Price (per carat)"}
-        >
-          <RequiredRule />
-        </Column>
-        <Column
-          dataField="TotalPrice"
-          caption={"Total Price"}
-        >
-          <RequiredRule />
-        </Column>
         <Column dataField="Enhancement">
           <RequiredRule />
         </Column>
         <Column dataField="QualityGrade" caption="Quality Grade">
           <RequiredRule />
         </Column>
-        <Column
-          dataField="StockNumber"
-          caption={"Stock Number"}
-          >
-          </Column>
+        <Column dataField="StockNumber" caption={"Stock #"}></Column>
+        <Column dataField="Quantity" dataType={"number"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="Size" caption="Size">
+          <RequiredRule />
+        </Column>
+        <Column dataField="Weight">
+          <RequiredRule />
+        </Column>
         <Column dataField="Description" width={300}>
           <RequiredRule />
         </Column>
+        <Column dataField="Shape">
           <RequiredRule />
+        </Column>
+        <Column dataField="Costperpiece" caption={"Cost P/P"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="Costpercarat" caption={"Cost P/C"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="TotalCost" caption={"Total Cost"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="Priceperpiece" caption={"Selling Price P/P"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="Pricepercarat" caption={"Selling Price P/C"}>
+          <RequiredRule />
+        </Column>
+        <Column dataField="TotalPrice" caption={"Total Price"}>
+          <RequiredRule />
+        </Column>
+        <RequiredRule />
         <Column type="buttons">
           <Button name="edit" onClick={editClick} />
           <Button name="delete" onClick={deleteClick} />
         </Column>
       </DataGrid>
       <Popup
-      style={{height:'62vh', width:'45vw'}}
-        title={'Export selected data'}
+        style={{ height: "62vh", width: "45vw" }}
+        title={"Export selected data"}
         closeOnOutsideClick={true}
         visible={popupVisible2}
         onHiding={() => setVisibility(false)}
-     >
-         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
-       <FileContainer data={datatoexport}/>
-       </ScrollView>
-     </Popup>
-     <Popup
-        title={'Delete Folder'}
-        closeOnOutsideClick={true}
-        visible={popupVisible4}
-        onHiding={() => setPopupVisible4(false)}
-     >
-         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
-       <DeleteFolders/>
-       </ScrollView>
-     </Popup>
-     <Popup
-        title={'Create Folder'}
+      >
+        <ScrollView
+          id="scroll-top"
+          height={"100%"}
+          width={"100%"}
+          useNative={true}
+        >
+          <FileContainer data={datatoexport} />
+        </ScrollView>
+      </Popup>
+   
+      <Popup
+        title={"Create Folder"}
         closeOnOutsideClick={true}
         visible={popupVisible3}
+        height={"auto"}
+        width={"400px"}
         onHiding={() => setPopupVisible3(false)}
-     >
-         <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
-         <CreateFolders/>
-       </ScrollView>
-     </Popup>
+      >
+        <ScrollView
+          id="scroll-top"
+          height={"100%"}
+          width={"100%"}
+          useNative={true}
+        >
+          <CreateFolders />
+        </ScrollView>
+      </Popup>
       <Popup
         title={popupMode}
         closeOnOutsideClick={true}
         visible={popupVisible}
         onHiding={onHiding}
-     >
-      
-
+      >
         {/* <ToolbarItem
           widget="dxButton"
           location="after"
@@ -2566,7 +2626,12 @@ function Gems() {
           toolbar="bottom"
           options={cancelBtnOptions}
         /> */}
-        <ScrollView id="scroll-top" height={'100%'} width={'100%'} useNative={true}>
+        <ScrollView
+          id="scroll-top"
+          height={"100%"}
+          width={"100%"}
+          useNative={true}
+        >
           <AvForm onSubmit={handleSubmit} id="av-form" method="post">
             <div>
               <div>
@@ -2716,7 +2781,11 @@ function Gems() {
                     inline
                     name="roughtypeofgem"
                     value={state.roughtypeofgem}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Type of Gem</p>}
+                    label={
+                      <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                        Type of Gem
+                      </p>
+                    }
                     onChange={(e) => onRoughType(e)}
                   >
                     <AvRadio label="Precious Gems" value="Precious Gems" />
@@ -2832,19 +2901,178 @@ function Gems() {
                     />
                   </AvGroup>
                 )}
-                 <AvGroup>
-                 <AvField
-                    label="Quantity"
-                    id="exampleEmail"
-                    name="email"
-                    placeholder=""
-                    type="number"
-                    value={state.quantity}
-                    onChange={(e) =>
-                      setState({ ...state, quantity: e.target.value })
-                    }
-                  />
+
+                {isMinesource.isrest && (
+                  <AvGroup>
+                    <AvField
+                      label="Mine Source"
+                      id="exampleEmail"
+                      type="text"
+                      name="minesource"
+                      placeholder=""
+                      value={state.minesource}
+                      onChange={(e) =>
+                        setState({ ...state, minesource: e.target.value })
+                      }
+                    />
                   </AvGroup>
+                )}
+                {/* {isMinesource.isprecious && (
+                  <AvRadioGroup
+                    inline
+                    name="specificsource"
+                    value={state.specificsource}
+                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Mine Source</p>}
+                    onChange={(e) => onMineSourceChange(e)}
+                  >
+                    <AvRadio label="Sapphire" value="Sapphire" />
+                    <AvRadio label="Ruby" value="Ruby" />
+                    <AvRadio label="Emerald" value="Emerald" />
+                    <AvRadio label="Tanzanite" value="Tanzanite" />
+                    <AvRadio label="Alexandrite" value="Alexandrite" />
+                    <AvRadio label="Cats Eye" value="Cats Eye" />
+                  </AvRadioGroup>
+                )} */}
+                {isMinesource.issaphire && (
+                  <AvGroup>
+                    <AvField
+                      label="Sapphire Mine Source"
+                      id="exampleEmail"
+                      name="selectminesource"
+                      type="select"
+                      placeholder=""
+                      value={state.selectminesource}
+                      onChange={(e) => onSaphireSourceChange(e)}
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Australian</option>
+                      <option>Ceylon</option>
+                      <option>Kashmir</option>
+                      <option>Cambodia</option>
+                      <option>Madagascar</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+
+                {isMinesource.isruby && (
+                  <AvGroup>
+                    <AvField
+                      label="Ruby Mine Source"
+                      id="exampleEmail"
+                      name="selectminesource"
+                      type="select"
+                      placeholder=""
+                      value={state.selectminesource}
+                      onChange={(e) => onRubySourceChange(e)}
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Burmese</option>
+                      <option>Thai</option>
+                      <option>African</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+
+                {isMinesource.isemerald && (
+                  <AvGroup>
+                    <AvField
+                      label="Emerald Mine Source"
+                      id="exampleEmail"
+                      name="selectminesource"
+                      type="select"
+                      placeholder=""
+                      value={state.selectminesource}
+                      onChange={(e) => onEmeraldSourceChange(e)}
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Emerald</option>
+                      <option>Brazilian</option>
+                      <option>Colombian</option>
+                      <option>Zambian</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+
+                {isMinesource.istanzanite && (
+                  <AvGroup>
+                    <AvField
+                      label="Tanzanite Mine Source"
+                      id="exampleEmail"
+                      name="selectminesource"
+                      type="select"
+                      placeholder=""
+                      value={state.selectminesource}
+                      onChange={(e) => onTanzaniteSourceChange(e)}
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Tanzania</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+
+                {isMinesource.isalex && (
+                  <AvGroup>
+                    <AvField
+                      label="Alexandrite Mine Source"
+                      id="exampleEmail"
+                      name="selectminesource"
+                      type="select"
+                      placeholder=""
+                      value={state.selectminesource}
+                      onChange={(e) => onAlexSourceChange(e)}
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Russia</option>
+                      <option>Brazil</option>
+                      <option>Sri Lanka</option>
+                      <option>East Africa</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+                {isMinesource.isotherminesource && (
+                  <AvGroup>
+                    <AvGroup>
+                      <AvField
+                        label="Other"
+                        name="otherminesource"
+                        placeholder=""
+                        value={state.otherminesource}
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            otherminesource: e.target.value,
+                            minesource: `${state.specificsource} / ${e.target.value}`,
+                          })
+                        }
+                      ></AvField>
+                    </AvGroup>
+                  </AvGroup>
+                )}
+
+                {isMinesource.iscatseye && (
+                  <AvGroup>
+                    <AvGroup>
+                      <AvField
+                        label="Cats Eye"
+                        name="otherminesource"
+                        placeholder=""
+                        value={state.otherminesource}
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            otherminesource: e.target.value,
+                            minesource: `${state.specificsource} / ${e.target.value}`,
+                          })
+                        }
+                      ></AvField>
+                    </AvGroup>
+                  </AvGroup>
+                )}
                 {isFormation.isrest && (
                   <AvGroup>
                     <AvField
@@ -3010,69 +3238,6 @@ function Gems() {
                     ></AvField>
                   </AvGroup>
                 )}
-                {isClarity.isdiamonds && (
-                  <AvGroup>
-                    <AvField
-                      label="Clarity"
-                      id="exampleEmail"
-                      name="clarity"
-                      type="select"
-                      placeholder=""
-                      value={state.clarity}
-                      onChange={(e) =>
-                        setState({ ...state, clarity: e.target.value })
-                      }
-                    >
-                      <option value="">Select...</option>
-                      <option>FL</option>
-                      <option>IF</option>
-                      <option>VVS1</option>
-                      <option>VVS2</option>
-                      <option>VS1</option>
-                      <option>VS2</option>
-                      <option>SI1</option>
-                      <option>SI2</option>
-                      <option>SI3</option>
-                      <option>I1</option>
-                      <option>I2</option>
-                      <option>I3</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-                {isClarity.isprecious && (
-                  <AvGroup>
-                    <AvField
-                      label="Clarity"
-                      id="exampleEmail"
-                      name="clarity"
-                      type="select"
-                      placeholder=""
-                      value={state.clarity}
-                      onChange={(e) => onPreciousClarity(e)}
-                    >
-                      <option value="">Select...</option>
-                      <option> Very very slightly included (VVSI)</option>
-                      <option>Very slightly included (VSI)</option>
-                      <option>Slightly included (SI)</option>
-                      <option>Included (I)</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-                {isClarity.isotherprecious && (
-                  <AvGroup>
-                    <AvField
-                      label="Other"
-                      id="otherclarity"
-                      name="otherclarity"
-                      placeholder=""
-                      value={state.otherclarity}
-                      // onChange={(e) =>
-                      //   setState({ ...state, otherclarity: e.target.value })
-                      // }
-                    ></AvField>
-                  </AvGroup>
-                )}
                 {iscolorintensity && (
                   <AvGroup>
                     <AvField
@@ -3110,33 +3275,16 @@ function Gems() {
                     />
                   </AvGroup>
                 )}
-                <AvGroup>
-                  <AvField
-                    label="Quality Grade"
-                    id="exampleEmail"
-                    name="qualitygrade"
-                    type="select"
-                    placeholder=""
-                    value={state.qualitygrade}
-                    onChange={(e) =>
-                      setState({ ...state, qualitygrade: e.target.value })
-                    }
-                  >
-                    <option value={""}>Select...</option>
-                    <option>AAAAA untreated heirloom</option>
-                    <option>AAAA heirloom</option>
-                    <option>AAA excellent</option>
-                    <option>AA very good </option>
-                    <option>A good</option>
-                  </AvField>
-                </AvGroup>
-
                 {isColor.colorwhite && (
                   <AvRadioGroup
                     inline
                     name="shades"
                     value={state.shades}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
+                    label={
+                      <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                        Shades
+                      </p>
+                    }
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3154,7 +3302,11 @@ function Gems() {
                     inline
                     name="shades"
                     value={state.shades}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
+                    label={
+                      <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                        Shades
+                      </p>
+                    }
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3181,7 +3333,11 @@ function Gems() {
                     inline
                     name="shades"
                     value={state.shades}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
+                    label={
+                      <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                        Shades
+                      </p>
+                    }
                     onChange={(e) =>
                       setState({ ...state, shades: e.target.value })
                     }
@@ -3200,7 +3356,11 @@ function Gems() {
                     inline
                     name="shades"
                     value={state.specificshades}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shades</p>}
+                    label={
+                      <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                        Shades
+                      </p>
+                    }
                     onChange={(e) => onShadesChange(e)}
                   >
                     <AvRadio label="Blue" value="Blue" />
@@ -3310,6 +3470,221 @@ function Gems() {
                     ></AvField>
                   </AvGroup>
                 )}
+                {isClarity.isdiamonds && (
+                  <AvGroup>
+                    <AvField
+                      label="Clarity"
+                      id="exampleEmail"
+                      name="clarity"
+                      type="select"
+                      placeholder=""
+                      value={state.clarity}
+                      onChange={(e) =>
+                        setState({ ...state, clarity: e.target.value })
+                      }
+                    >
+                      <option value="">Select...</option>
+                      <option>FL</option>
+                      <option>IF</option>
+                      <option>VVS1</option>
+                      <option>VVS2</option>
+                      <option>VS1</option>
+                      <option>VS2</option>
+                      <option>SI1</option>
+                      <option>SI2</option>
+                      <option>SI3</option>
+                      <option>I1</option>
+                      <option>I2</option>
+                      <option>I3</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+                {isClarity.isprecious && (
+                  <AvGroup>
+                    <AvField
+                      label="Clarity"
+                      id="exampleEmail"
+                      name="clarity"
+                      type="select"
+                      placeholder=""
+                      value={state.clarity}
+                      onChange={(e) => onPreciousClarity(e)}
+                    >
+                      <option value="">Select...</option>
+                      <option> Very very slightly included (VVSI)</option>
+                      <option>Very slightly included (VSI)</option>
+                      <option>Slightly included (SI)</option>
+                      <option>Included (I)</option>
+                      <option>Other</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+                {isClarity.isotherprecious && (
+                  <AvGroup>
+                    <AvField
+                      label="Other"
+                      id="otherclarity"
+                      name="otherclarity"
+                      placeholder=""
+                      value={state.otherclarity}
+                      // onChange={(e) =>
+                      //   setState({ ...state, otherclarity: e.target.value })
+                      // }
+                    ></AvField>
+                  </AvGroup>
+                )}
+
+                {isenhancement && (
+                  <AvGroup>
+                    <AvField
+                      label="Enhancement"
+                      id="exampleEmail"
+                      name="enhancement"
+                      type="select"
+                      placeholder=""
+                      value={state.enhancement}
+                      onChange={(e) =>
+                        setState({ ...state, enhancement: e.target.value })
+                      }
+                    >
+                      <option value={""}>Select...</option>
+                      <option>Treated</option>
+                      <option>Untreated</option>
+                    </AvField>
+                  </AvGroup>
+                )}
+
+                <AvGroup>
+                  <AvField
+                    label="Quality Grade"
+                    id="exampleEmail"
+                    name="qualitygrade"
+                    type="select"
+                    placeholder=""
+                    value={state.qualitygrade}
+                    onChange={(e) =>
+                      setState({ ...state, qualitygrade: e.target.value })
+                    }
+                  >
+                    <option value={""}>Select...</option>
+                    <option>AAAAA untreated heirloom</option>
+                    <option>AAAA heirloom</option>
+                    <option>AAA excellent</option>
+                    <option>AA very good </option>
+                    <option>A good</option>
+                  </AvField>
+                </AvGroup>
+
+                <AvField
+                  label="Stock #"
+                  id="exampleEmail"
+                  name="email"
+                  placeholder=""
+                  value={state.stocknumber}
+                  onChange={(e) =>
+                    setState({ ...state, stocknumber: e.target.value })
+                  }
+                />
+                <AvGroup>
+                  <AvField
+                    label="Quantity"
+                    id="exampleEmail"
+                    name="email"
+                    placeholder=""
+                    type="number"
+                    value={state.quantity}
+                    onChange={(e) =>
+                      setState({ ...state, quantity: e.target.value })
+                    }
+                  />
+                </AvGroup>
+                <div style={{ marginBottom: "17.5px" }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "auto auto auto",
+                      gridGap: "20px",
+                    }}
+                  >
+                    <div style={{ marginBottom: "17.5px" }}>
+                      <Label>Length</Label>
+                      <NumberFormat
+                        value={state.length}
+                        thousandSeparator={true}
+                        decimalSeparator="00"
+                        suffix={" mm"}
+                        decimalScale={2}
+                        decimalSeparator={"."}
+                        onValueChange={(values) => {
+                          const { formattedValue } = values;
+                          setState({ ...state, length: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+
+                    <div style={{ marginBottom: "17.5px" }}>
+                      <Label>Width</Label>
+                      <NumberFormat
+                        value={state.width}
+                        thousandSeparator={true}
+                        suffix={" mm"}
+                        decimalScale={2}
+                        decimalSeparator={"."}
+                        onValueChange={(values) => {
+                          const { formattedValue } = values;
+                          setState({ ...state, width: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                    <div style={{ marginBottom: "17.5px" }}>
+                      <Label>Depth</Label>
+                      <NumberFormat
+                        value={state.depth}
+                        thousandSeparator={true}
+                        decimalSeparator="00"
+                        suffix={" mm"}
+                        decimalScale={2}
+                        decimalSeparator={"."}
+                        onValueChange={(values) => {
+                          const { formattedValue } = values;
+                          setState({ ...state, depth: formattedValue });
+                        }}
+                        className="form-controller"
+                      />
+                    </div>
+                  </div>
+                  <Label>Weight</Label>
+                  <NumberFormat
+                    value={state.weight}
+                    thousandSeparator={true}
+                    decimalSeparator="00"
+                    placeholder={`${
+                      isTypeofgem.isrough ? "(grams)" : "(carats)"
+                    }`}
+                    suffix={`${isTypeofgem.isrough ? " grams" : " carats"}`}
+                    decimalScale={2}
+                    fixedDecimalScale={true}
+                    decimalSeparator={"."}
+                    onValueChange={(values) => {
+                      const { formattedValue, floatValue } = values;
+                      setWeight(floatValue);
+                      setState({ ...state, weight: formattedValue });
+                    }}
+                    className="form-controller"
+                  />
+                </div>
+                <AvGroup>
+                  <AvField
+                    label="Description"
+                    id="description"
+                    name="email"
+                    type="textarea"
+                    placeholder=""
+                    value={state.description}
+                  />
+                </AvGroup>
               </div>
               <div>
                 {isShape.isdiamonds && (
@@ -3318,7 +3693,11 @@ function Gems() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
+                      label={
+                        <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                          Shape
+                        </p>
+                      }
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Faceted" value="Faceted" />
@@ -3333,7 +3712,11 @@ function Gems() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
+                      label={
+                        <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                          Shape
+                        </p>
+                      }
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3348,7 +3731,11 @@ function Gems() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
+                      label={
+                        <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                          Shape
+                        </p>
+                      }
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3363,7 +3750,11 @@ function Gems() {
                       inline
                       name="shape"
                       value={state.specifyshape}
-                      label={<p style={{fontSize : '15px', marginBottom: '0'}}>Shape</p>}
+                      label={
+                        <p style={{ fontSize: "15px", marginBottom: "0" }}>
+                          Shape
+                        </p>
+                      }
                       onChange={(e) => onShapeChange(e)}
                     >
                       <AvRadio label="Cabochon" value="Cabochon" />
@@ -3400,6 +3791,7 @@ function Gems() {
                           ...state,
                           otherpearlsshape: e.target.value,
                           shape: e.target.value,
+                          description: e.target.value,
                         })
                       }
                     ></AvField>
@@ -3443,7 +3835,8 @@ function Gems() {
                             setState({
                               ...state,
                               othercabochonshape: e.target.value,
-                              shape: `Cabochon / ${e.target.value}`,
+                              shape: `${e.target.value} / Cabochon`,
+                              description: `${e.target.value} / Cabochon`,
                             })
                           }
                         ></AvField>
@@ -3489,7 +3882,8 @@ function Gems() {
                             setState({
                               ...state,
                               otherfacetedshape: e.target.value,
-                              shape: `Faceted / ${e.target.value}`,
+                              shape: `${e.target.value} / Faceted`,
+                              description: `${e.target.value} / Faceted`,
                             })
                           }
                         ></AvField>
@@ -3535,6 +3929,7 @@ function Gems() {
                               ...state,
                               otheroldeushape: e.target.value,
                               shape: `Old European / ${e.target.value}`,
+                              description: `Old European / ${e.target.value}`,
                             })
                           }
                         ></AvField>
@@ -3554,242 +3949,31 @@ function Gems() {
                           ...state,
                           fancyshape: e.target.value,
                           shape: `Fancy / ${e.target.value}`,
+                          description: `Fancy / ${e.target.value}`,
                         })
                       }
                     ></AvField>
                   </AvGroup>
                 )}
-                {isMinesource.isrest && (
-                  <AvGroup>
-                    <AvField
-                      label="Mine Source"
-                      id="exampleEmail"
-                      type="text"
-                      name="minesource"
-                      placeholder=""
-                      value={state.minesource}
-                      onChange={(e) =>
-                        setState({ ...state, minesource: e.target.value })
-                      }
-                    />
-                  </AvGroup>
-                )}
-                {isMinesource.isprecious && (
-                  <AvRadioGroup
-                    inline
-                    name="specificsource"
-                    value={state.specificsource}
-                    label={<p style={{fontSize : '15px', marginBottom: '0'}}>Mine Source</p>}
-                    onChange={(e) => onMineSourceChange(e)}
-                  >
-                    <AvRadio label="Sapphire" value="Sapphire" />
-                    <AvRadio label="Ruby" value="Ruby" />
-                    <AvRadio label="Emerald" value="Emerald" />
-                    <AvRadio label="Tanzanite" value="Tanzanite" />
-                    <AvRadio label="Alexandrite" value="Alexandrite" />
-                    <AvRadio label="Cats Eye" value="Cats Eye" />
-                  </AvRadioGroup>
-                )}
-                {isMinesource.issaphire && (
-                  <AvGroup>
-                    <AvField
-                      label="Sapphire Mine Source"
-                      id="exampleEmail"
-                      name="selectminesource"
-                      type="select"
-                      placeholder=""
-                      value={state.selectminesource}
-                      onChange={(e) => onSaphireSourceChange(e)}
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Australian</option>
-                      <option>Ceylon</option>
-                      <option>Kashmir</option>
-                      <option>Cambodia</option>
-                      <option>Madagascar</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
 
-                {isMinesource.isruby && (
-                  <AvGroup>
-                    <AvField
-                      label="Ruby Mine Source"
-                      id="exampleEmail"
-                      name="selectminesource"
-                      type="select"
-                      placeholder=""
-                      value={state.selectminesource}
-                      onChange={(e) => onRubySourceChange(e)}
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Burmese</option>
-                      <option>Thai</option>
-                      <option>African</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-
-                {isMinesource.isemerald && (
-                  <AvGroup>
-                    <AvField
-                      label="Emerald Mine Source"
-                      id="exampleEmail"
-                      name="selectminesource"
-                      type="select"
-                      placeholder=""
-                      value={state.selectminesource}
-                      onChange={(e) => onEmeraldSourceChange(e)}
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Emerald</option>
-                      <option>Brazilian</option>
-                      <option>Colombian</option>
-                      <option>Zambian</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-
-                {isMinesource.istanzanite && (
-                  <AvGroup>
-                    <AvField
-                      label="Tanzanite Mine Source"
-                      id="exampleEmail"
-                      name="selectminesource"
-                      type="select"
-                      placeholder=""
-                      value={state.selectminesource}
-                      onChange={(e) => onTanzaniteSourceChange(e)}
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Tanzania</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-
-                {isMinesource.isalex && (
-                  <AvGroup>
-                    <AvField
-                      label="Alexandrite Mine Source"
-                      id="exampleEmail"
-                      name="selectminesource"
-                      type="select"
-                      placeholder=""
-                      value={state.selectminesource}
-                      onChange={(e) => onAlexSourceChange(e)}
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Russia</option>
-                      <option>Brazil</option>
-                      <option>Sri Lanka</option>
-                      <option>East Africa</option>
-                      <option>Other</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-                {isMinesource.isotherminesource && (
-                  <AvGroup>
-                    <AvGroup>
-                      <AvField
-                        label="Other"
-                        name="otherminesource"
-                        placeholder=""
-                        value={state.otherminesource}
-                        onChange={(e) =>
-                          setState({
-                            ...state,
-                            otherminesource: e.target.value,
-                            minesource: `${state.specificsource} / ${e.target.value}`,
-                          })
-                        }
-                      ></AvField>
-                    </AvGroup>
-                  </AvGroup>
-                )}
-
-                {isMinesource.iscatseye && (
-                  <AvGroup>
-                    <AvGroup>
-                      <AvField
-                        label="Cats Eye"
-                        name="otherminesource"
-                        placeholder=""
-                        value={state.otherminesource}
-                        onChange={(e) =>
-                          setState({
-                            ...state,
-                            otherminesource: e.target.value,
-                            minesource: `${state.specificsource} / ${e.target.value}`,
-                          })
-                        }
-                      ></AvField>
-                    </AvGroup>
-                  </AvGroup>
-                )}
-
-                <div style={{marginBottom:'17.5px'}}>
-                   <Label>Weight</Label>
-                    <NumberFormat
-                      value={state.weight}
-                      thousandSeparator={true}
-                      decimalSeparator="00"
-                      placeholder={`${isTypeofgem.isrough? "(grams)" : "(carats)"}`}
-                      suffix={`${isTypeofgem.isrough? " grams" : " carats"}`}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue,floatValue } = values;
-                        setWeight(floatValue)
-                        setState({ ...state, weight: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-
-                {isenhancement && (
-                  <AvGroup>
-                    <AvField
-                      label="Enhancement"
-                      id="exampleEmail"
-                      name="enhancement"
-                      type="select"
-                      placeholder=""
-                      value={state.enhancement}
-                      onChange={(e) =>
-                        setState({ ...state, enhancement: e.target.value })
-                      }
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Treated</option>
-                      <option>Untreated</option>
-                    </AvField>
-                  </AvGroup>
-                )}
-                <hr/>
+                <hr />
                 <AvGroup>
-                    <AvField
-                      label="Cost"
-                      id="exampleEmail"
-                      name="cost"
-                      type="select"
-                      placeholder=""
-                      value={state.cost}
-                      onChange={(e) =>
-                        onCostChange(e)
-                      }
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Per Piece</option>
-                      <option>Per Carats</option>
-                    </AvField>
-                  </AvGroup>
-                  {cost.perpiece && (
-                    <AvGroup>
+                  <AvField
+                    label="Cost"
+                    id="exampleEmail"
+                    name="cost"
+                    type="select"
+                    placeholder=""
+                    value={state.cost}
+                    onChange={(e) => onCostChange(e)}
+                  >
+                    <option value={""}>Select...</option>
+                    <option>Per Piece</option>
+                    <option>Per Carats</option>
+                  </AvField>
+                </AvGroup>
+                {cost.perpiece && (
+                  <AvGroup>
                     <div>
                       <Label>Cost (per piece)</Label>
                       <NumberFormat
@@ -3797,8 +3981,8 @@ function Gems() {
                         thousandSeparator={true}
                         prefix={"$"}
                         decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
+                        fixedDecimalScale={true}
+                        decimalSeparator={"."}
                         onValueChange={(values) => {
                           const { formattedValue } = values;
                           setState({ ...state, costperpiece: formattedValue });
@@ -3806,95 +3990,96 @@ function Gems() {
                         className="form-controller"
                       />
                     </div>
-                    </AvGroup>
-                  )}
+                  </AvGroup>
+                )}
 
                 {cost.percarats && (
                   <>
                     <AvGroup>
+                      <div>
+                        <Label>Cost (per carats)</Label>
+                        <NumberFormat
+                          value={state.costpercarat}
+                          thousandSeparator={true}
+                          prefix={"$"}
+                          decimalScale={2}
+                          fixedDecimalScale={true}
+                          decimalSeparator={"."}
+                          onValueChange={(values) => {
+                            const { formattedValue, floatValue } = values;
+                            setCostPerCarat(floatValue);
+                            setState({
+                              ...state,
+                              costpercarat: formattedValue,
+                              totalcost: floatValue * weight,
+                            });
+                          }}
+                          className="form-controller"
+                        />
+                      </div>
+                    </AvGroup>
+                    <AvGroup>
+                      <div>
+                        <Label>Total Cost</Label>
+                        <NumberFormat
+                          value={state.totalcost}
+                          thousandSeparator={true}
+                          prefix={"$"}
+                          decimalScale={2}
+                          fixedDecimalScale={true}
+                          decimalSeparator={"."}
+                          onValueChange={(values) => {
+                            const { formattedValue } = values;
+                            setState({ ...state, totalcost: formattedValue });
+                            // onTotalCostChange(formattedValue)
+                          }}
+                          className="form-controller"
+                        />
+                      </div>
+                    </AvGroup>
+                  </>
+                )}
+
+                {cost.perpiece && (
+                  <AvGroup>
                     <div>
-                      <Label>Cost (per carats)</Label>
+                      <Label>Total Cost</Label>
                       <NumberFormat
-                        value={state.costpercarat}
+                        value={state.totalcost}
                         thousandSeparator={true}
                         prefix={"$"}
                         decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
+                        fixedDecimalScale={true}
+                        decimalSeparator={"."}
                         onValueChange={(values) => {
-                          const { formattedValue,floatValue } = values;
-                          setCostPerCarat(floatValue)
-                          setState({ ...state, costpercarat: formattedValue, totalcost : floatValue * weight });
+                          const { formattedValue } = values;
+                          setState({ ...state, totalcost: formattedValue });
+                          // onTotalCostChange(formattedValue)
                         }}
                         className="form-controller"
                       />
                     </div>
-                    </AvGroup>
-                     <AvGroup>
-                     <div>
-                       <Label>Total Cost</Label>
-                       <NumberFormat
-                         value={state.totalcost}
-                         thousandSeparator={true}
-                         prefix={"$"}
-                         decimalScale={2}
-                         fixedDecimalScale={true}
-                         decimalSeparator={'.'}
-                         onValueChange={(values) => {
-                           const { formattedValue } = values;
-                           setState({ ...state, totalcost: formattedValue });
-                           // onTotalCostChange(formattedValue)
-                         }}
-                         className="form-controller"
-                       />
-                     </div>
-                     </AvGroup>
-                     </>
-                  )}
-
-{cost.perpiece && (
-                  <AvGroup>
-                  <div>
-                    <Label>Total Cost</Label>
-                    <NumberFormat
-                      value={state.totalcost}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, totalcost: formattedValue });
-                        // onTotalCostChange(formattedValue)
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
                   </AvGroup>
                 )}
 
+                <AvGroup>
+                  <AvField
+                    label="Selling Price"
+                    id="exampleEmail"
+                    name="price"
+                    type="select"
+                    placeholder=""
+                    value={state.price}
+                    onChange={(e) => onPriceChange(e)}
+                  >
+                    <option value={""}>Select...</option>
+                    <option>Per Piece</option>
+                    <option>Per Carats</option>
+                  </AvField>
+                </AvGroup>
+
+                {price.perpiece && (
                   <AvGroup>
-                    <AvField
-                      label="Selling Price"
-                      id="exampleEmail"
-                      name="price"
-                      type="select"
-                      placeholder=""
-                      value={state.price}
-                      onChange={(e) =>
-                        onPriceChange(e)
-                      }
-                    >
-                      <option value={""}>Select...</option>
-                      <option>Per Piece</option>
-                      <option>Per Carats</option>
-                    </AvField>
-                  </AvGroup>
-
-
-{price.perpiece && (
-                    <AvGroup>
                     <div>
                       <Label>Selling Price (per piece)</Label>
                       <NumberFormat
@@ -3902,8 +4087,8 @@ function Gems() {
                         thousandSeparator={true}
                         prefix={"$"}
                         decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
+                        fixedDecimalScale={true}
+                        decimalSeparator={"."}
                         onValueChange={(values) => {
                           const { formattedValue } = values;
                           setState({ ...state, priceperpiece: formattedValue });
@@ -3911,152 +4096,76 @@ function Gems() {
                         className="form-controller"
                       />
                     </div>
-                    </AvGroup>
-                  )}
+                  </AvGroup>
+                )}
 
                 {price.percarats && (
                   <>
                     <AvGroup>
+                      <div>
+                        <Label>Selling Price (per carats)</Label>
+                        <NumberFormat
+                          value={state.pricepercarat}
+                          thousandSeparator={true}
+                          prefix={"$"}
+                          decimalScale={2}
+                          fixedDecimalScale={true}
+                          decimalSeparator={"."}
+                          onValueChange={(values) => {
+                            const { formattedValue, floatValue } = values;
+                            setPricePerCarat(floatValue);
+                            setState({
+                              ...state,
+                              pricepercarat: formattedValue,
+                              totalprice: floatValue * weight,
+                            });
+                          }}
+                          className="form-controller"
+                        />
+                      </div>
+                    </AvGroup>
+                    <AvGroup>
+                      <div>
+                        <Label>Total Price</Label>
+                        <NumberFormat
+                          value={state.totalprice}
+                          thousandSeparator={true}
+                          prefix={"$"}
+                          decimalScale={2}
+                          fixedDecimalScale={true}
+                          decimalSeparator={"."}
+                          onValueChange={(values) => {
+                            const { formattedValue } = values;
+                            setState({ ...state, totalprice: formattedValue });
+                          }}
+                          className="form-controller"
+                        />
+                      </div>
+                    </AvGroup>
+                  </>
+                )}
+
+                {price.perpiece && (
+                  <AvGroup>
                     <div>
-                      <Label>Selling Price (per carats)</Label>
+                      <Label>Total Price</Label>
                       <NumberFormat
-                        value={state.pricepercarat}
+                        value={state.totalprice}
                         thousandSeparator={true}
                         prefix={"$"}
                         decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
+                        fixedDecimalScale={true}
+                        decimalSeparator={"."}
                         onValueChange={(values) => {
-                          const { formattedValue,floatValue } = values;
-                          setPricePerCarat(floatValue)
-                          setState({ ...state, pricepercarat: formattedValue, totalprice : floatValue * weight });
+                          const { formattedValue } = values;
+                          setState({ ...state, totalprice: formattedValue });
                         }}
                         className="form-controller"
                       />
                     </div>
-                    </AvGroup>
-                    <AvGroup>
-                  <div>
-                    <Label>Total Price</Label>
-                    <NumberFormat
-                      value={state.totalprice}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, totalprice: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                </AvGroup>
-                    </>
-                  )}
-
-
-
-                
-               {price.perpiece && (
-                  <AvGroup>
-                  <div>
-                    <Label>Total Price</Label>
-                    <NumberFormat
-                      value={state.totalprice}
-                      thousandSeparator={true}
-                      prefix={"$"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, totalprice: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                </AvGroup>
-               )}
-                <hr/>
-               
-
-                 
-                  <div style={{display:'grid', gridTemplateColumns:'auto auto auto', gridGap : '20px'}}>
-                  <div style={{marginBottom:'17.5px'}}>
-                    <Label>Length</Label>
-                    <NumberFormat
-                      value={state.length}
-                      thousandSeparator={true}
-                      decimalSeparator="00"
-                      suffix={" mm"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, length: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-
-                <div style={{marginBottom:'17.5px'}}>
-                    <Label>Width</Label>
-                    <NumberFormat
-                      value={state.width}
-                      thousandSeparator={true}
-                      suffix={" mm"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, width: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                  <div style={{marginBottom:'17.5px'}}>
-                    <Label>Depth</Label>
-                    <NumberFormat
-                      value={state.depth}
-                      thousandSeparator={true}
-                      decimalSeparator="00"
-                      suffix={" mm"}
-                      decimalScale={2}
-                      fixedDecimalScale={true}
-                      decimalSeparator={'.'}
-                      onValueChange={(values) => {
-                        const { formattedValue } = values;
-                        setState({ ...state, depth: formattedValue });
-                      }}
-                      className="form-controller"
-                    />
-                  </div>
-                  </div>
-              
-                  <AvField
-                    label="Stock Number"
-                    id="exampleEmail"
-                    name="email"
-                    placeholder=""
-                    value={state.stocknumber}
-                    onChange={(e) =>
-                      setState({ ...state, stocknumber: e.target.value })
-                    }
-                  />
-                <AvGroup>
-                  <AvField
-                    label="Description"
-                    id="description"
-                    name="email"
-                    type="textarea"
-                    placeholder=""
-                    value={state.description}
-                  />
-                </AvGroup>
+                  </AvGroup>
+                )}
+                <hr />
               </div>
             </div>
           </AvForm>
