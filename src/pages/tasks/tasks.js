@@ -689,7 +689,7 @@ function Gems() {
     } else if (e.target.value === "Emerald") {
       setColorCategory({
         isdiamonds: false,
-        isprecious: true,
+        isprecious: false,
         issemiprecious: false,
         isrough: false,
         isopals: false,
@@ -711,7 +711,7 @@ function Gems() {
     } else if (e.target.value === "Ruby") {
       setColorCategory({
         isdiamonds: false,
-        isprecious: true,
+        isprecious: false,
         issemiprecious: false,
         isrough: false,
         isopals: false,
@@ -733,7 +733,7 @@ function Gems() {
     } else if (e.target.value === "Tanzanite") {
       setColorCategory({
         isdiamonds: false,
-        isprecious: true,
+        isprecious: false,
         issemiprecious: false,
         isrough: false,
         isopals: false,
@@ -755,7 +755,7 @@ function Gems() {
     } else if (e.target.value === "Cats Eye") {
       setColorCategory({
         isdiamonds: false,
-        isprecious: true,
+        isprecious: false,
         issemiprecious: false,
         isrough: false,
         isopals: false,
@@ -777,7 +777,7 @@ function Gems() {
     } else if (e.target.value === "Alexandrite") {
       setColorCategory({
         isdiamonds: false,
-        isprecious: true,
+        isprecious: false,
         issemiprecious: false,
         isrough: false,
         isopals: false,
@@ -822,13 +822,71 @@ function Gems() {
     }
   };
 
+  const nullifystate = (category) => {
+    return setState({
+      ...state,
+      category,
+      weight: "",
+      size: "",
+      typeofgem: "",
+      roughtypeofgem: "",
+      othertypeofgem: "",
+      otherroughtypeofgem: "",
+      formation: "",
+      otherformation: "",
+      shape: "",
+      facetedshape: "",
+      cabochonshape: "",
+      othercabochonshape: "",
+      oldeushape: "",
+      otherfacetedshape: "",
+      otheroldeushape: "",
+      specifyshape: "",
+      fancyshape: "",
+      color: "",
+      othercolor: "",
+      shades: "",
+      clarity: "",
+      length: "",
+      width: "",
+      depth: "",
+      cost: "",
+      price: "",
+      costperpiece: "",
+      costpercarat: "",
+      totalcost: "",
+      priceperpiece: "",
+      pricepercarat: "",
+      totalprice: "",
+      enhancement: "",
+      qualitygrade: "",
+      description: "",
+      quantity: "",
+      otherpearlsshape: "",
+      specificsource: "",
+      minesource: "",
+      selectminesource: "",
+      otherminesource: "",
+      colorintensity: "",
+      othercolorintensity: "",
+      otherclarity: "",
+      listshades: "",
+      othershades: "",
+      specificshades: "",
+      selectroughtypeofgem: "",
+      ID: "",
+    })
+  }
+
   const onCategoryChange = (e) => {
     if (e.target.value === "Other") {
+      nullifystate(e.target.value)
       handleHidePopup(1);
       setisOthercategory(true);
       state.stocknumber = 0;
       state.category = "Other";
     } else if (e.target.value === "Precious Gems") {
+      nullifystate(e.target.value)
       showEnhancement(true);
       state.stocknumber = generateStock(200000, 300000);
       setisClarity({
@@ -889,6 +947,7 @@ function Gems() {
       state.category = e.target.value;
       setisOthercategory(false);
     } else if (e.target.value === "Semi-Precious Gems") {
+      nullifystate(e.target.value)
       showEnhancement(true);
       state.stocknumber = generateStock(300000, 400000);
       setisClarity({
@@ -958,6 +1017,7 @@ function Gems() {
       setisOthercolorintensity(false);
       state.category = e.target.value;
     } else if (e.target.value === "Opals") {
+      nullifystate(e.target.value)
       // NullifyState()
       showEnhancement(false);
       state.stocknumber = generateStock(400000, 500000);
@@ -1029,6 +1089,7 @@ function Gems() {
       state.category = e.target.value;
       setisOthercategory(false);
     } else if (e.target.value === "Pearls") {
+      nullifystate(e.target.value)
       showEnhancement(false);
       state.stocknumber = generateStock(600000, 700000);
       setisClarity({
@@ -1098,6 +1159,7 @@ function Gems() {
       setisOtherformation(false);
       setisOthercolorintensity(false);
     } else if (e.target.value === "Diamonds") {
+      nullifystate(e.target.value)
       showEnhancement(false);
       state.stocknumber = generateStock(100000, 200000);
       setisClarity({
@@ -1161,6 +1223,7 @@ function Gems() {
       setisOthercolorintensity(false);
       state.category = e.target.value;
     } else if (e.target.value === "Rough") {
+      nullifystate(e.target.value)
       showEnhancement(false);
       state.stocknumber = generateStock(500000, 600000);
       setisClarity({
